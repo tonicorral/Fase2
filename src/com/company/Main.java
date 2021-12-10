@@ -12,5 +12,6 @@ public class Main {
         //menu.ejecutarMenu();
         UIController uiController = new UIController(consoleUIManager);
         uiController.run();
+        System.out.println("d");
     }
 }
