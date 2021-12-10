@@ -1,18 +1,16 @@
 package com.company;
 
 import com.company.business.GestionPruebas;
-import com.company.presentation.Menu;
+import com.company.presentation.ConsoleUIManager;
+import com.company.presentation.UIController;
+import com.company.presentation.UIManager;
 
 public class Main {
 
     public static void main(String[] args) {
-	    Menu menu = new Menu();
+        UIManager consoleUIManager = new ConsoleUIManager();
         //menu.ejecutarMenu();
-        GestionPruebas gestionPruebas = new GestionPruebas();
-        gestionPruebas.crearPruebaPublicacion("Prueba1","a","4A",3,3,3);
-        gestionPruebas.crearPruebaPublicacion("Prueba2","a","4A",3,3,3);
-        gestionPruebas.crearPruebaPublicacion("Prueba3","a","4A",3,3,3);
-        gestionPruebas.listaPruebas();
-        System.out.println("Buen trabajo");
+        UIController uiController = new UIController(consoleUIManager);
+        uiController.run();
     }
 }
