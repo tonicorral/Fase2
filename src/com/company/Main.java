@@ -13,5 +13,6 @@ public class Main {
         gestionPruebas.crearPruebaPublicacion("Prueba2","a","4A",3,3,3);
         gestionPruebas.crearPruebaPublicacion("Prueba3","a","4A",3,3,3);
         gestionPruebas.listaPruebas();
+        System.out.println("Buen trabajo");
     }
 }
