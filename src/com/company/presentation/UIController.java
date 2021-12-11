@@ -1,10 +1,14 @@
 package com.company.presentation;
 
+import com.company.business.BusinessFacade;
+
 public class UIController {
     private final UIManager ui;
+    private final BusinessFacade bf;
 
-    public UIController(UIManager ui) {
+    public UIController(UIManager ui, BusinessFacade bf) {
         this.ui = ui;
+        this.bf = bf;
     }
 
     public void run (){
@@ -21,6 +25,7 @@ public class UIController {
                         case MANAGE_TRIALS:
                             switch (ui.menuTrials()){
                                 case CREATE_TRIALS:
+                                    //ConsoleUIManager pide los datos al usuario
                                     ui.showTrialsTypes();
                                     trialName = ui.askTrialName();
                                     journalNme = ui.askJournalName();
@@ -28,6 +33,10 @@ public class UIController {
                                     acc = ui.askAccessProb();
                                     rev = ui.askRevProb();
                                     rej = ui.askRejProb();
+                                    //Le decimos al DAO de business que cree la trial
+                                    bf.createTrial(trialName, journalNme, quartile, acc, rev, rej);
+                                    break;
+                                case LIST_TRIALS:
 
                             }
                         case EXIT:

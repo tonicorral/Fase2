@@ -1,9 +1,9 @@
 package com.company.business;
 
-public class Prueba {
+public class Trial {
     private String nombre;
 
-    public Prueba(String nombre) {
+    public Trial(String nombre) {
         this.nombre = nombre;
     }
 

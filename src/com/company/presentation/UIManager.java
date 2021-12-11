@@ -12,5 +12,6 @@ public interface UIManager {
     int askRevProb();
     int askRejProb();
 
+
     }
 
