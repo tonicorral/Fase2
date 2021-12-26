@@ -14,7 +14,7 @@ public class Main {
         UIManager consoleUIManager = new ConsoleUIManager();
         //menu.ejecutarMenu();
         TrialDAO trialDAO = new TrialDAOcsv("data/trials.csv");
-        trialDAO.getAll();
+        //trialDAO.getAll();
         BusinessFacade businessFacade = new BusinessFacadeImpl();
         UIController uiController = new UIController(consoleUIManager, businessFacade);
         uiController.run();

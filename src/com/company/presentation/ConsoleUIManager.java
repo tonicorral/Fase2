@@ -139,10 +139,27 @@ public class ConsoleUIManager implements UIManager {
         return Integer.valueOf(scanner.nextLine());
     }
 
+    @Override
+    public int showTrialsName(String[] names) {
+        int i;
+        System.out.println("Here are the current trials, do you want to see more details or go back?\n");
+        for (i = 0; i < names.length; i++) {
+            System.out.println((i+1)+") "+names[i]);
+        }
+        System.out.println("\n"+(i+1)+") Back\n");
+        System.out.println("Enter an option: ");
 
-
-
-
+        return Integer.valueOf(scanner.nextLine());
     }
+
+    @Override
+    public void showTrialData(String[] data) {
+        System.out.println("\nTrial: "+ data[0]+ " (Paper Publication)");
+        System.out.println("Journal: "+ data[1]+ " ("+ data[2]+ ")");
+        System.out.println("Chances: "+ data[3]+ "% acceptance, "+ data[4] +"% revision, " + data[5]+ "% rejection");
+    }
+
+
+}
 
 

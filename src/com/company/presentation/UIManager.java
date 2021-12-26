@@ -11,6 +11,8 @@ public interface UIManager {
     int askAccessProb();
     int askRevProb();
     int askRejProb();
+    int showTrialsName(String[] names);
+    void showTrialData(String[] data);
 
 
     }

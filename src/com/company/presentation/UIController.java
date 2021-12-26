@@ -37,7 +37,9 @@ public class UIController {
                                     bf.createTrial(trialName, journalNme, quartile, acc, rev, rej);
                                     break;
                                 case LIST_TRIALS:
-
+                                    //muestra las listas creadas
+                                    int numPrueba = ui.showTrialsName(bf.showTrialsName());
+                                    ui.showTrialData(bf.trialInfo(numPrueba));
                             }
                         case EXIT:
                             break;

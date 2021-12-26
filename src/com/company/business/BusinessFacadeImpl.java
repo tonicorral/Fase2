@@ -16,5 +16,17 @@ public class BusinessFacadeImpl implements BusinessFacade{
         trialManager.crearPruebaPublicacion(trialName, trialJournal, quartile, acc, rev, rej);
     }
 
+    @Override
+    public String[] showTrialsName() {
+
+        return trialManager.listaPruebas();
+    }
+
+    @Override
+    public String[] trialInfo(int numberTrial) {
+
+        return trialManager.infoPrueba(numberTrial);
+    }
+
 
 }

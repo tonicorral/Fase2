@@ -3,6 +3,8 @@ package com.company.business;
 import com.company.persistence.TrialDAO;
 import com.company.persistence.TrialDAOcsv;
 
+import java.util.ArrayList;
+
 public class TrialManager {
     private final TrialDAO trialDAO;
 
@@ -20,17 +22,26 @@ public class TrialManager {
         System.out.println("The trial was created succesfully!");
     }
 
-    /*public void listaPruebas() {
-        int num = 1;
-
-        System.out.println("Here are the current trials, do you want to see more details or go back?\n");
-        for (Trial prueba: pruebas) {
-            System.out.println(num+") "+prueba.getNombre());
-
-            num++;
+    public String[] listaPruebas() {
+        Trial[] trials = trialDAO.getAll();
+        ArrayList <String> names = new ArrayList<>();
+        for (Trial trial: trials) {
+            names.add(trial.getNombre());
         }
-        System.out.println("\n"+num+") Back");
-        System.out.println("\nEnter an option:");
 
-    }*/
+        return names.toArray(new String[names.size()]);
+    }
+
+    public  String[] infoPrueba(int numberPrueba) {
+        TrialPublicacionArticulo trial = trialDAO.get(numberPrueba);
+        ArrayList<String> data = new ArrayList<>();
+        data.add(trial.getNombre());
+        data.add(trial.getNombreRevista());
+        data.add(trial.getQuartil());
+        data.add(String.valueOf(trial.getProbAceptar()));
+        data.add(String.valueOf(trial.getProbRevision()));
+        data.add(String.valueOf(trial.getProbDenegar()));
+
+        return data.toArray(new String[data.size()]);
+    }
 }

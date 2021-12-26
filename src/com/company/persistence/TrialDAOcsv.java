@@ -37,22 +37,42 @@ public class TrialDAOcsv implements TrialDAO{
 
     @Override
     public Trial[] getAll() {
-        TrialPublicacionArticulo a;
+        ArrayList<TrialPublicacionArticulo> trial = new ArrayList<>();
         try {
             ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(path));
-            System.out.println(fileContent.get(0));
+            for (String fileLine: fileContent) {
+                TrialPublicacionArticulo a = trialFromCSV(fileLine);
+                trial.add(a);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return new Trial[0];
+        return trial.toArray(new Trial[trial.size()]);
+    }
+
+    @Override
+    public TrialPublicacionArticulo get(int numberTrial) {
+        ArrayList<TrialPublicacionArticulo> trial = new ArrayList<>();
+        try {
+            ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(path));
+            for (String fileLine: fileContent) {
+                TrialPublicacionArticulo a = trialFromCSV(fileLine);
+                trial.add(a);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return trial.get(numberTrial--);
     }
 
     private String trialToCSV(TrialPublicacionArticulo trial) {
         String file;
 
         file = trial.getNombre()+","+trial.getNombreRevista()+","+trial.getQuartil()+","+
-                trial.getProbAceptar()+","+trial.getProbRevision()+","+trial.getProbDenegar();
+                trial.getProbAceptar()+","+trial.getProbRevision()+","+trial.getProbDenegar()+";";
 
         return file;
     }
@@ -60,10 +80,10 @@ public class TrialDAOcsv implements TrialDAO{
     private TrialPublicacionArticulo trialFromCSV(String trial) {
         TrialPublicacionArticulo t;
         String[] a;
-
+        String[] b;
         a = trial.split(",");
-        a[5].substring(0,a[5].length()-1);
-        t = new TrialPublicacionArticulo(a[0],a[1], a[2], Integer.parseInt(a[3]), Integer.parseInt(a[4]), Integer.parseInt(a[5]));
+        b = a[5].split(";");
+        t = new TrialPublicacionArticulo(a[0],a[1], a[2], Integer.parseInt(a[3]), Integer.parseInt(a[4]), Integer.parseInt(b[0]));
 
         return t;
     }
