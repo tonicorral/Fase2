@@ -12,18 +12,27 @@ public class UIController {
     }
 
     public void run (){
+        //TrialData
         String trialName;
         String journalNme;
         String quartile;
         int acc;
         int rev;
         int rej;
+
+        //EditionData
+        int año;
+        int numJugadores;
+        int numPruebas;
+        int[] seleccionPruebas;
+
         while(true){
-            switch (ui.showRoles()){
+            switch (ui.showRoles()) {
                 case SELECT_COMPOSITOR:
-                    switch (ui.opcionesCompositor()){
+                    switch (ui.opcionesCompositor()) {
+
                         case MANAGE_TRIALS:
-                            switch (ui.menuTrials()){
+                            switch (ui.menuTrials()) {
                                 case CREATE_TRIALS:
                                     //ConsoleUIManager pide los datos al usuario
                                     ui.showTrialsTypes();
@@ -37,10 +46,47 @@ public class UIController {
                                     bf.createTrial(trialName, journalNme, quartile, acc, rev, rej);
                                     break;
                                 case LIST_TRIALS:
+                                    ui.listTrialsText();
                                     //muestra las listas creadas
-                                    int numPrueba = ui.showTrialsName(bf.showTrialsName());
-                                    ui.showTrialData(bf.trialInfo(numPrueba));
+                                    int numPrueba = ui.showTrialsName(bf.trialsNames());
+                                    // comprovamos back
+                                    if(!bf.trialExit(numPrueba)) {
+                                        ui.showTrialData(bf.trialInfo(numPrueba));      //mostrar datos
+                                    }
+                                    break;
+                                case DELETE_TRIALS:
+                                    ui.deleteTrialsText();
+                                    int numPruebaDel = ui.showTrialsName(bf.trialsNames());
+                                    // comprovamos back
+                                    if(!bf.trialExit(numPruebaDel)) {
+                                       if(ui.deleteConfirmation(numPruebaDel, bf.trialsNames())) {
+                                           bf.deleteTrial(numPruebaDel);
+                                           ui.deleteOK();
+                                       }
+                                    }
+                                    break;
+
                             }
+                            break;
+
+                        case MANAGE_EDITIONS:
+                            switch (ui.menuEditions()){
+                                case CREATE_EDITION:
+                                    año = ui.askEditionYear();
+                                    numJugadores = ui.askEditionPlayers();
+                                    numPruebas= ui.askEditionNumberTrials();
+                                    seleccionPruebas = ui.pickEditionTrials(bf.trialsNames(), numPruebas);
+
+                                    break;
+                                case LIST_EDITIONS:
+                                    break;
+                                case DUPLICATE_EDITION:
+                                    break;
+                                case DELETE_EDITION:
+                                    break;
+
+                            }
+                            break;
                         case EXIT:
                             break;
                     }

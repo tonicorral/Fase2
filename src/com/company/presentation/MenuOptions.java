@@ -8,6 +8,10 @@ public enum MenuOptions {
     CREATE_TRIALS,
     LIST_TRIALS,
     DELETE_TRIALS,
-    EXIT
+    EXIT,
+    CREATE_EDITION,
+    LIST_EDITIONS,
+    DUPLICATE_EDITION,
+    DELETE_EDITION,
 }
 

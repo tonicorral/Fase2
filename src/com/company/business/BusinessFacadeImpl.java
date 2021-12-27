@@ -17,7 +17,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
     }
 
     @Override
-    public String[] showTrialsName() {
+    public String[] trialsNames() {
 
         return trialManager.listaPruebas();
     }
@@ -26,6 +26,16 @@ public class BusinessFacadeImpl implements BusinessFacade{
     public String[] trialInfo(int numberTrial) {
 
         return trialManager.infoPrueba(numberTrial);
+    }
+
+    @Override
+    public boolean trialExit(int numPrueba) {
+        return trialManager.trialExit(numPrueba);
+    }
+
+    @Override
+    public void deleteTrial(int numPrueba) {
+        trialManager.delete(numPrueba);
     }
 
 

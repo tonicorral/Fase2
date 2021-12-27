@@ -7,5 +7,7 @@ public interface TrialDAO {
     void save(TrialPublicacionArticulo trial);
     Trial[] getAll();
     TrialPublicacionArticulo get(int numberTrial);
+    boolean trialExit(int numPrueba);       //comprovar para ir para atras lista pruebas
+    void delete(int numPrueba);
 }
 

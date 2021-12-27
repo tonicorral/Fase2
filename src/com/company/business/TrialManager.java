@@ -44,4 +44,14 @@ public class TrialManager {
 
         return data.toArray(new String[data.size()]);
     }
+
+    public boolean trialExit(int numPrueba) {
+        return trialDAO.trialExit(numPrueba);
+    }
+
+    public void delete(int numPrueba) {
+        trialDAO.delete(numPrueba);
+    }
+
+
 }

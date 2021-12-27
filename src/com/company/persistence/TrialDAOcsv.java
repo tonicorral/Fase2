@@ -35,6 +35,7 @@ public class TrialDAOcsv implements TrialDAO{
         }
     }
 
+    //Devuelve todas las pruebas
     @Override
     public Trial[] getAll() {
         ArrayList<TrialPublicacionArticulo> trial = new ArrayList<>();
@@ -52,6 +53,7 @@ public class TrialDAOcsv implements TrialDAO{
         return trial.toArray(new Trial[trial.size()]);
     }
 
+    //Devuelve la prueba que corresponde el num que le entra
     @Override
     public TrialPublicacionArticulo get(int numberTrial) {
         ArrayList<TrialPublicacionArticulo> trial = new ArrayList<>();
@@ -65,9 +67,46 @@ public class TrialDAOcsv implements TrialDAO{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return trial.get(numberTrial--);
+        return trial.get(numberTrial-1);
     }
 
+    @Override
+    public boolean trialExit(int numPrueba) {
+        Trial[] trials = getAll();      //llamamos a la funcion
+        if(trials.length + 1 == numPrueba) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void delete(int numPrueba) {
+        ArrayList<TrialPublicacionArticulo> trials = new ArrayList<>();
+        try {
+            ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(path));
+            for (String fileLine: fileContent) {
+                TrialPublicacionArticulo a = trialFromCSV(fileLine);
+                trials.add(a);
+            }
+
+            ArrayList<String> trialList = new ArrayList<>();     //arraylist de pruebas
+            for (int i = 0; i < trials.size(); i++) {
+                if(i != numPrueba - 1){
+                    trialList.add(trialToCSV(trials.get(i)));       //guardamos todas las pruebas menos la que borramos
+                }
+            }
+
+            Files.write(path, trialList);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    //info a texto
     private String trialToCSV(TrialPublicacionArticulo trial) {
         String file;
 
