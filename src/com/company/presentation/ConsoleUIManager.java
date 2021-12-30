@@ -252,6 +252,29 @@ public class ConsoleUIManager implements UIManager {
         return nums;
     }
 
+    @Override
+    public int showEditionYears(int[] years) {
+        int i;
+        System.out.println("Here are the current editions, do you want to see more details or go back?\n");
+        for (i = 0; i < years.length; i++) {
+            System.out.println((i+1)+") The Trials "+years[i]);
+        }
+        System.out.println("\n"+(i+1)+") Back\n");
+        System.out.println("Enter an option: ");
+
+        return Integer.valueOf(scanner.nextLine());
+    }
+
+    @Override
+    public void showEditionData(String[] info) {
+        System.out.println("Year: "+info[0]);
+        System.out.println("Players: "+info[1]);
+        System.out.println("Trials:");
+        for (int i = 0; i < Integer.parseInt(info[2]); i++) {
+            System.out.println("\t"+(i+1)+"- "+info[3+i]+" (Paper publication)");
+        }
+    }
+
 
 }
 

@@ -22,5 +22,7 @@ public interface UIManager {
     int askEditionPlayers();
     int askEditionNumberTrials();
     int[] pickEditionTrials(String[] nameTrial, int numPruebas);
+    int showEditionYears(int[] years);
+    void showEditionData(String[] info);
     }
 

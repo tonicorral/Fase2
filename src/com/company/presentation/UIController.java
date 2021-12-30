@@ -72,13 +72,18 @@ public class UIController {
                         case MANAGE_EDITIONS:
                             switch (ui.menuEditions()){
                                 case CREATE_EDITION:
+                                    //pedimos info
                                     año = ui.askEditionYear();
                                     numJugadores = ui.askEditionPlayers();
                                     numPruebas= ui.askEditionNumberTrials();
                                     seleccionPruebas = ui.pickEditionTrials(bf.trialsNames(), numPruebas);
-
+                                    //creamos edicion
+                                    bf.createEdition(año, numJugadores, numPruebas, seleccionPruebas);
                                     break;
+
                                 case LIST_EDITIONS:
+                                    int numEdition = ui.showEditionYears(bf.editionYear());
+                                    ui.showEditionData(bf.editionInfo(numEdition));
                                     break;
                                 case DUPLICATE_EDITION:
                                     break;

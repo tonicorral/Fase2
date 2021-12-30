@@ -12,7 +12,7 @@ public class TrialManager {
         trialDAO = new TrialDAOcsv("data/trials.csv");
     }
 
-    public void crearPruebaPublicacion(String nombrePrueba, String nombreRevista, String quartil, int probAceptar,
+    public TrialPublicacionArticulo crearPruebaPublicacion(String nombrePrueba, String nombreRevista, String quartil, int probAceptar,
                                        int probRevision, int probDenegar) {
 
         TrialPublicacionArticulo prueba = new TrialPublicacionArticulo(nombrePrueba, nombreRevista, quartil, probAceptar,
@@ -20,6 +20,8 @@ public class TrialManager {
 
         trialDAO.save(prueba);
         System.out.println("The trial was created succesfully!");
+
+        return prueba;
     }
 
     public String[] listaPruebas() {
