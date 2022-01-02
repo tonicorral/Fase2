@@ -8,6 +8,9 @@ public interface BusinessFacade {
     void deleteTrial(int numPrueba);
     void createEdition(int year, int numPlayers, int numTrials, int[] nums);
     int[] editionYear();
-    Edition editionTrials(int numEdition);      //metemos todas las pruebas dentro de la edicion
+    Edition addEditionTrial(int numEdition);      //metemos todas las pruebas dentro de la edicion
     String[] editionInfo(int numEdition);       //sacamos la informacion de la edicion
+    boolean exitEdition(int numEdition);
+    int[] editionTrials(int numEdition);
+    void deleteEdition(int numEdition);
 }

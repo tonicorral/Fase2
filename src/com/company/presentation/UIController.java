@@ -82,12 +82,29 @@ public class UIController {
                                     break;
 
                                 case LIST_EDITIONS:
+                                    ui.showEditionMessage(MenuOptions.LIST_EDITIONS);
                                     int numEdition = ui.showEditionYears(bf.editionYear());
-                                    ui.showEditionData(bf.editionInfo(numEdition));
+                                    if(!bf.exitEdition(numEdition)) {
+                                        ui.showEditionData(bf.editionInfo(numEdition));
+                                    }
                                     break;
                                 case DUPLICATE_EDITION:
+                                    ui.showEditionMessage(MenuOptions.DUPLICATE_EDITION);
+                                    int numEditionDuplicate = ui.showEditionYears(bf.editionYear());
+                                    if(!bf.exitEdition(numEditionDuplicate)) {
+                                        int numDuplicateYear = ui.askDuplicateYear();
+                                        int numDuplicatePlayer = ui.askDuplicateNumPlayers();
+                                        int[] numDuplicateNum = bf.editionTrials(numEditionDuplicate);
+                                        bf.createEdition(numDuplicateYear, numDuplicatePlayer, numDuplicateNum.length, numDuplicateNum);
+                                    }
                                     break;
                                 case DELETE_EDITION:
+                                    ui.showEditionMessage(MenuOptions.DELETE_EDITION);
+                                    int numEditionDelete = ui.showEditionYears(bf.editionYear());
+                                    if(!bf.exitEdition(numEditionDelete)) {
+                                        ui.askDeleteYear(Integer.valueOf(bf.editionInfo(numEditionDelete)[0]));
+                                        bf.deleteEdition(numEditionDelete);
+                                    }
                                     break;
 
                             }

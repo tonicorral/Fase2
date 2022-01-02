@@ -19,6 +19,7 @@ public class TrialManager {
                 probRevision, probDenegar);
 
         trialDAO.save(prueba);
+        // TODO mover a consoleuimanager
         System.out.println("The trial was created succesfully!");
 
         return prueba;

@@ -15,7 +15,7 @@ public class EditionManager {
     public void crearEdition(int year, int numPlayers, int numTrials, int[] nums) {
 
         Edition edition = new Edition(year, numPlayers,numTrials, nums);
-        editionDAO.save(edition, nums);
+        editionDAO.save(edition);
     }
 
     public int[] listaEdition() {
@@ -32,4 +32,13 @@ public class EditionManager {
         return editionDAO.get(numEdition);
     }
 
+    public boolean exitEdition (int numEdition){
+        return editionDAO.exitEdition(numEdition);
+    }
+
+    public void deleteEdition(int numEdition) {
+        editionDAO.delete(numEdition);
+    }
+
 }
+

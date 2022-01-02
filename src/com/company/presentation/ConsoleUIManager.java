@@ -255,7 +255,7 @@ public class ConsoleUIManager implements UIManager {
     @Override
     public int showEditionYears(int[] years) {
         int i;
-        System.out.println("Here are the current editions, do you want to see more details or go back?\n");
+
         for (i = 0; i < years.length; i++) {
             System.out.println((i+1)+") The Trials "+years[i]);
         }
@@ -273,6 +273,44 @@ public class ConsoleUIManager implements UIManager {
         for (int i = 0; i < Integer.parseInt(info[2]); i++) {
             System.out.println("\t"+(i+1)+"- "+info[3+i]+" (Paper publication)");
         }
+    }
+
+    @Override
+    public void showEditionMessage(MenuOptions option) {
+        switch (option){
+            case LIST_EDITIONS:
+                System.out.println("Here are the current editions, do you want to see more details or go back?\n");
+            break;
+            case DUPLICATE_EDITION:
+                System.out.println("Which edition do you want to clone?\n");
+            break;
+            case DELETE_EDITION:
+                System.out.println("Which edition do you want to delete?\n");
+            break;
+
+        }
+    }
+
+    @Override
+    public int askDuplicateYear() {
+        System.out.println("Enter the new edition’s year:");
+        return Integer.valueOf(scanner.nextLine());
+    }
+
+    @Override
+    public int askDuplicateNumPlayers() {
+        System.out.println("Enter the new edition’s initial number of players:");
+        return Integer.valueOf(scanner.nextLine());
+    }
+
+    @Override
+    public boolean askDeleteYear(int editionYear) {
+        System.out.println("Enter the edition’s year for confirmation:");
+        int year = Integer.valueOf(scanner.nextLine());
+        if(year == editionYear){
+            return true;
+        }
+         return false;
     }
 
 

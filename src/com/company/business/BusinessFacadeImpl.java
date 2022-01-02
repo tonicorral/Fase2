@@ -51,12 +51,11 @@ public class BusinessFacadeImpl implements BusinessFacade{
     }
 
     @Override
-    public Edition editionTrials(int numEdition) {
+    public Edition addEditionTrial(int numEdition) {
         Edition edition = editionManager.getEdition(numEdition);
         TrialPublicacionArticulo[] trials = new TrialPublicacionArticulo[edition.getNumTrials()];
 
         for (int i = 0; i < edition.getNumTrials(); i++) {
-            System.out.println(edition.getNum()[i]);
             String[] prueba = trialManager.infoPrueba(edition.getNum()[i]);         //pillamos todos los datos de la prueba
             trials[i] = trialManager.crearPruebaPublicacion(prueba[0], prueba[1], prueba[2], Integer.parseInt(prueba[3]),
                     Integer.parseInt(prueba[4]), Integer.parseInt(prueba[5]));
@@ -68,7 +67,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
     @Override
     public String[] editionInfo(int numEdition) {
         ArrayList<String> info = new ArrayList<>();
-        Edition edition = editionTrials(numEdition);      //crearla y meterle todas las pruebas
+        Edition edition = addEditionTrial(numEdition);      //crearla y meterle todas las pruebas
 
         TrialPublicacionArticulo[] trials = edition.getTrials();
         info.add(String.valueOf(edition.getYear()));
@@ -80,6 +79,22 @@ public class BusinessFacadeImpl implements BusinessFacade{
         }
 
         return info.toArray(new String[info.size()]);
+    }
+
+    @Override
+    public boolean exitEdition(int numEdition) {
+        return editionManager.exitEdition(numEdition);
+    }
+
+    @Override
+    public int[] editionTrials(int numEdition) {
+        Edition edition = editionManager.getEdition(numEdition);
+        return edition.getNum();
+    }
+
+    @Override
+    public void deleteEdition(int numEdition) {
+        editionManager.deleteEdition(numEdition);
     }
 
 

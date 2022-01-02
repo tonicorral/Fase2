@@ -26,9 +26,9 @@ public class EditionDAOcsv implements EditionDAO {
     }
 
     @Override
-    public void save(Edition edition, int[] nums) {
+    public void save(Edition edition) {
         try {
-            Files.write(path, Collections.singletonList(editionToCSV(edition, nums)), StandardOpenOption.APPEND);
+            Files.write(path, Collections.singletonList(editionToCSV(edition)), StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,11 +59,6 @@ public class EditionDAOcsv implements EditionDAO {
             for (String fileLine: fileContent) {
                 Edition a = editionFromCSV(fileLine);
                 editions.add(a);
-                System.out.println(a.getYear());
-                System.out.println(a.getNumPlayers());
-                System.out.println(a.getNumTrials());
-                System.out.println(a.getNum()[0]);
-                System.out.println(a.getNum()[1]);
             }
 
         } catch (IOException e) {
@@ -72,10 +67,43 @@ public class EditionDAOcsv implements EditionDAO {
         return editions.get(numEdition-1);
     }
 
-    //info a texto
-    private String editionToCSV(Edition edition, int[] numeros) {
-        String file;
+    @Override
+    public boolean exitEdition(int numEdition) {
+        Edition[] editions = getAll();      //llamamos a la funcion
+        if(editions.length + 1 == numEdition) {
+            return true;
+        }
+        return false;
+    }
 
+    @Override
+    public void delete(int numEdition) {
+        ArrayList<Edition> edition = new ArrayList<>();
+        try {
+            ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(path));
+            for (String fileLine: fileContent) {
+                Edition a = editionFromCSV(fileLine);
+                edition.add(a);
+            }
+
+            ArrayList<String> editionList = new ArrayList<>();     //arraylist de pruebas
+            for (int i = 0; i < edition.size(); i++) {
+                if(i != numEdition - 1){
+                    editionList.add(editionToCSV(edition.get(i)));       //guardamos todas las pruebas menos la que borramos
+                }
+            }
+
+            Files.write(path, editionList);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //info a texto
+    private String editionToCSV(Edition edition) {
+        String file;
+        int[] numeros = edition.getNum();
         file = edition.getYear()+","+edition.getNumPlayers()+","+edition.getNumTrials();
 
         for (int i = 0; i < numeros.length; i++) {
@@ -98,14 +126,14 @@ public class EditionDAOcsv implements EditionDAO {
         numPlayers = a[1];
         numTrials = Integer.parseInt(a[2]);
 
-        //TODO QUITAR ;
         int[] nums = new int[numTrials];
-        a[a.length - 1].split(";");
+        String[] b = a[a.length - 1].split(";");
+        int i;
 
-        for (int i = 0; i < numTrials; i++) {
+        for (i = 0; i < numTrials - 1; i++) {
             nums[i] = Integer.parseInt(a[i+3]);
         }
-
+        nums[i] = Integer.parseInt(b[0]);
         t = new Edition(Integer.parseInt(año),Integer.parseInt(numPlayers), numTrials, nums);
 
         return t;

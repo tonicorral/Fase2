@@ -24,5 +24,10 @@ public interface UIManager {
     int[] pickEditionTrials(String[] nameTrial, int numPruebas);
     int showEditionYears(int[] years);
     void showEditionData(String[] info);
+    void showEditionMessage(MenuOptions option);
+    int askDuplicateYear();
+    int askDuplicateNumPlayers();
+    boolean askDeleteYear(int editionYear);
+
     }
 
