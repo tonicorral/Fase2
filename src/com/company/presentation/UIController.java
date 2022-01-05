@@ -36,12 +36,12 @@ public class UIController {
                                 case CREATE_TRIALS:
                                     //ConsoleUIManager pide los datos al usuario
                                     ui.showTrialsTypes();
-                                    trialName = ui.askTrialName();
-                                    journalNme = ui.askJournalName();
-                                    quartile = ui.askQuartile();
-                                    acc = ui.askAccessProb();
-                                    rev = ui.askRevProb();
-                                    rej = ui.askRejProb();
+                                    trialName = ui.askString(ui.askTrialName);
+                                    journalNme = ui.askString(ui.askTrialJournal);
+                                    quartile = ui.askString(ui.askTrialQuartile);
+                                    acc = ui.askInt(ui.askAccessProb, 0 , 100);
+                                    rev = ui.askInt(ui.askRevProb, 0, 100);
+                                    rej = ui.askInt(ui.askRejProb, 0 , 100);
                                     //Le decimos al DAO de business que cree la trial
                                     bf.createTrial(trialName, journalNme, quartile, acc, rev, rej);
                                     break;
@@ -73,9 +73,9 @@ public class UIController {
                             switch (ui.menuEditions()){
                                 case CREATE_EDITION:
                                     //pedimos info
-                                    año = ui.askEditionYear();
-                                    numJugadores = ui.askEditionPlayers();
-                                    numPruebas= ui.askEditionNumberTrials();
+                                    año = ui.askInt(ui.askEditionYear, 1000, 9999);
+                                    numJugadores = ui.askInt(ui.askEditionPlayers, 1, 5);
+                                    numPruebas= ui.askInt(ui.askEditionNumberTrials, 3, 12);
                                     seleccionPruebas = ui.pickEditionTrials(bf.trialsNames(), numPruebas);
                                     //creamos edicion
                                     bf.createEdition(año, numJugadores, numPruebas, seleccionPruebas);
@@ -92,8 +92,8 @@ public class UIController {
                                     ui.showEditionMessage(MenuOptions.DUPLICATE_EDITION);
                                     int numEditionDuplicate = ui.showEditionYears(bf.editionYear());
                                     if(!bf.exitEdition(numEditionDuplicate)) {
-                                        int numDuplicateYear = ui.askDuplicateYear();
-                                        int numDuplicatePlayer = ui.askDuplicateNumPlayers();
+                                        int numDuplicateYear = ui.askInt(ui.askDuplicateYear, 1000, 9999);
+                                        int numDuplicatePlayer = ui.askInt(ui.askDuplicateNumPlayers, 1 , 5);
                                         int[] numDuplicateNum = bf.editionTrials(numEditionDuplicate);
                                         bf.createEdition(numDuplicateYear, numDuplicatePlayer, numDuplicateNum.length, numDuplicateNum);
                                     }
@@ -112,6 +112,16 @@ public class UIController {
                         case EXIT:
                             break;
                     }
+                case SELECT_CONDUCTOR:
+                    if(bf.checkCurrentEdition()) {
+                        int[] editionData = bf.getCurrentEditionData();
+                        bf.executeEdition(ui.askPlayers(editionData[0], editionData[1]));
+                    }
+                    else {
+                        ui.noCurrentEdition(bf.getCurrentYear());
+                    }
+                    break;
+
             }
         }
 

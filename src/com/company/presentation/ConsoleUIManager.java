@@ -5,7 +5,6 @@ import java.util.Scanner;
 public class ConsoleUIManager implements UIManager {
     private Scanner scanner;
 
-
     public ConsoleUIManager() {
         this.scanner = new Scanner(System.in);      //crear scanner para leer lo que ponga el usuario
     }
@@ -15,15 +14,14 @@ public class ConsoleUIManager implements UIManager {
             System.out.println("Welcome to The Trials. Who are you?\n");
             System.out.println("    A) The Composer");
             System.out.println("    B) This year's Conductor\n");
-            System.out.println("Enter a role:");
 
             try {
-                String datos = this.scanner.nextLine();
+                String datos = askString("Enter a role:");
                 switch (datos) {
-                    case "A":
+                    case "A","a":
                         return MenuOptions.SELECT_COMPOSITOR;
 
-                    case "B":
+                    case "B","b":
                         return MenuOptions.SELECT_CONDUCTOR;
 
                     default:
@@ -41,9 +39,8 @@ public class ConsoleUIManager implements UIManager {
         System.out.println("    1) Manage Trials");
         System.out.println("    2) Manage Editions\n");
         System.out.println("    3) Exit\n");
-        System.out.println("Enter an option:");
         try {
-            int data = Integer.parseInt(this.scanner.nextLine());
+            int data = askInt("Enter an option:");
             switch (data) {
                 case 1:
                     return MenuOptions.MANAGE_TRIALS;
@@ -68,20 +65,19 @@ public class ConsoleUIManager implements UIManager {
         System.out.println("\tb) List Trials");
         System.out.println("\tc) Delete Trial");
         System.out.println("\td) Back");
-        System.out.println("\nEnter an option!");
         try {
-            String data = this.scanner.nextLine();
+            String data = askString("\nEnter an option!");
             switch (data) {
-                case "a":
+                case "a","A":
                     return MenuOptions.CREATE_TRIALS;
 
-                case "b":
+                case "b","B":
                     return MenuOptions.LIST_TRIALS;
 
-                case "c":
+                case "c","C":
                     return MenuOptions.DELETE_TRIALS;
 
-                case "d":
+                case "d","D":
                     return MenuOptions.EXIT;
                 default:
                     throw new NumberFormatException();
@@ -96,47 +92,8 @@ public class ConsoleUIManager implements UIManager {
     public int showTrialsTypes() {
         System.out.println("--- Trial types ---");
         System.out.println("1) Paper publication");
-        System.out.println("Enter the trial’s type:");
 
-        return Integer.valueOf(scanner.nextLine());
-    }
-
-    @Override
-    public String askTrialName() {
-        System.out.println("Enter the trial’s name:");
-
-        return scanner.nextLine();
-    }
-
-    @Override
-    public String askJournalName() {
-        System.out.println("Enter the journal's name:");
-
-        return scanner.nextLine();
-    }
-
-    @Override
-    public String askQuartile() {
-        System.out.println("Enter the journal’s quartile:");
-        return scanner.nextLine();
-    }
-
-    @Override
-    public int askAccessProb() {
-        System.out.println("Enter the acceptance probability:");
-        return Integer.valueOf(scanner.nextLine());
-    }
-
-    @Override
-    public int askRevProb() {
-        System.out.println("Enter the revision probability:");
-        return  Integer.valueOf(scanner.nextLine());
-    }
-
-    @Override
-    public int askRejProb() {
-        System.out.println("Enter the rejection probability:");
-        return Integer.valueOf(scanner.nextLine());
+        return askInt("Enter the trial’s type:");
     }
 
     @Override
@@ -146,9 +103,8 @@ public class ConsoleUIManager implements UIManager {
             System.out.println((i+1)+") "+names[i]);
         }
         System.out.println("\n"+(i+1)+") Back\n");
-        System.out.println("Enter an option: ");
 
-        return Integer.valueOf(scanner.nextLine());
+        return askInt("Enter an option: ");
     }
 
     @Override
@@ -170,14 +126,13 @@ public class ConsoleUIManager implements UIManager {
 
     @Override
     public boolean deleteConfirmation(int numPrueba, String[] names) {
-        System.out.println("\nEnter the trial’s name for confirmation:");
-        String name = scanner.nextLine();
+        String name = askString("\nEnter the trial’s name for confirmation:");
         return name.equalsIgnoreCase(names[numPrueba - 1]);
     }
 
     @Override
     public void deleteOK() {
-        System.out.println("\nThe trial was successfully deleted.");
+        System.out.println("\nThe trial was successfully deleted.\n");
     }
 
     @Override
@@ -187,23 +142,22 @@ public class ConsoleUIManager implements UIManager {
         System.out.println("\tc) Duplicate Edition");
         System.out.println("\td) Delete Edition\n");
         System.out.println("\te) Back");
-        System.out.println("\nEnter an option!");
         try {
-            String data = this.scanner.nextLine();
+            String data = askString("\nEnter an option!");
             switch (data) {
-                case "a":
+                case "a","A":
                     return MenuOptions.CREATE_EDITION;
 
-                case "b":
+                case "b","B":
                     return MenuOptions.LIST_EDITIONS;
 
-                case "c":
+                case "c","C":
                     return MenuOptions.DUPLICATE_EDITION;
 
-                case "d":
+                case "d","D":
                     return MenuOptions.DELETE_EDITION;
 
-                case "e":
+                case "e","E":
                     return MenuOptions.EXIT;
                 default:
                     throw new NumberFormatException();
@@ -213,24 +167,6 @@ public class ConsoleUIManager implements UIManager {
         }
         return null;
 
-    }
-
-    @Override
-    public int askEditionYear() {
-        System.out.println("Enter the edition’s year:");
-        return Integer.valueOf(scanner.nextLine());
-    }
-
-    @Override
-    public int askEditionPlayers() {
-        System.out.println("Enter the initial number of players:");
-        return Integer.valueOf(scanner.nextLine());
-    }
-
-    @Override
-    public int askEditionNumberTrials() {
-        System.out.println("Enter the number of trials:");
-        return Integer.valueOf(scanner.nextLine());
     }
 
     //TODO Comprovar que hay al menos 3 pruebas creadas
@@ -245,10 +181,10 @@ public class ConsoleUIManager implements UIManager {
         int[] nums = new int[numPruebas];
         for (int j = 0; j < numPruebas; j++) {
             System.out.println("Pick a trial ("+(j+1)+"/"+numPruebas+"):");
-            nums[j] = Integer.parseInt(scanner.nextLine());
+            nums[j] = askInt();
         }
 
-        System.out.println("\nThe edition was created successfully!");
+        System.out.println("\nThe edition was created successfully!\n");
         return nums;
     }
 
@@ -260,9 +196,8 @@ public class ConsoleUIManager implements UIManager {
             System.out.println((i+1)+") The Trials "+years[i]);
         }
         System.out.println("\n"+(i+1)+") Back\n");
-        System.out.println("Enter an option: ");
 
-        return Integer.valueOf(scanner.nextLine());
+        return askInt("Enter an option: ");
     }
 
     @Override
@@ -292,25 +227,92 @@ public class ConsoleUIManager implements UIManager {
     }
 
     @Override
-    public int askDuplicateYear() {
-        System.out.println("Enter the new edition’s year:");
-        return Integer.valueOf(scanner.nextLine());
-    }
-
-    @Override
-    public int askDuplicateNumPlayers() {
-        System.out.println("Enter the new edition’s initial number of players:");
-        return Integer.valueOf(scanner.nextLine());
-    }
-
-    @Override
     public boolean askDeleteYear(int editionYear) {
-        System.out.println("Enter the edition’s year for confirmation:");
-        int year = Integer.valueOf(scanner.nextLine());
+        int year = askInt("Enter the edition’s year for confirmation:");
         if(year == editionYear){
             return true;
         }
          return false;
+    }
+
+    @Override
+    public String askString(String text) {
+        System.out.println(text);
+        do {
+            String info = scanner.nextLine();
+
+            //comprovar que no esta vacia
+            if(!info.equals("")) {
+                return info;
+            }
+            System.out.println("Enter a valid text!");
+
+        }while(true);
+    }
+
+    @Override
+    public int askInt(String text) {
+        System.out.println(text);
+        do {
+            String info = scanner.nextLine();
+            try {
+                return Integer.parseInt(info);
+            }
+            catch(NumberFormatException e) {
+                System.out.println("Must write a number!");
+            }
+        }while(true);
+    }
+
+    @Override
+    public int askInt() {
+        do {
+            String info = scanner.nextLine();
+            try {
+                return Integer.parseInt(info);
+            }
+            catch(NumberFormatException e) {
+                System.out.println("Must write a number!");
+            }
+        }while(true);
+    }
+
+    @Override
+    public int askInt(String text, int min, int max) {
+        System.out.println(text);
+        do {
+            String info = scanner.nextLine();
+            try {
+                int num = Integer.parseInt(info);
+                if(num >= min && num <= max) {
+                    return num;
+                }
+                System.out.println("Enter a number between "+min+" and "+max+"!");
+            }
+            catch(NumberFormatException e) {
+                System.out.println("Must write a number!");
+            }
+        }while(true);
+    }
+
+    @Override
+    public void noCurrentEdition(int year) {
+        System.out.println("\nEntering execution mode...\n");
+        System.out.println("No edition is defined for the current year ("+year+").\n");
+        System.out.println("Shutting down...");
+    }
+
+    @Override
+    public String[] askPlayers(int year, int numPlayers) {
+        System.out.println("Entering execution mode...\n");
+        System.out.println("--- TRIALS "+year+" ---\n");
+        String[] names = new String[numPlayers];
+
+        for (int i = 0; i <numPlayers; i++) {
+            names[i] = askString("Enter the player's name ("+(i+1)+"/"+numPlayers+"):");
+        }
+
+        return names;
     }
 
 

@@ -1,6 +1,7 @@
 package com.company.business;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class BusinessFacadeImpl implements BusinessFacade{
     private final TrialManager trialManager;        //Solo una vez
@@ -95,6 +96,42 @@ public class BusinessFacadeImpl implements BusinessFacade{
     @Override
     public void deleteEdition(int numEdition) {
         editionManager.deleteEdition(numEdition);
+    }
+
+    @Override
+    public boolean checkCurrentEdition() {
+        if(editionManager.getCurrentEdition() == null) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int[] getCurrentEditionData() {
+        Edition edition = editionManager.getCurrentEdition();
+        int year = edition.getYear();
+        int numPlayers = edition.getNumPlayers();
+
+        return new int[] {year,numPlayers};
+    }
+
+    @Override
+    public int getCurrentYear() {
+        return Calendar.getInstance().get(Calendar.YEAR);
+    }
+
+    @Override
+    public void executeEdition(String[] players) {
+        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(),savePlayers(players),0);
+    }
+
+    private Player[] savePlayers(String[] names) {
+        Player[] players = new Player[names.length];
+
+        for (int i = 0; i < names.length; i++) {
+            players[i] = new Player(names[i]);
+        }
+        return players;
     }
 
 

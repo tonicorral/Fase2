@@ -13,4 +13,8 @@ public interface BusinessFacade {
     boolean exitEdition(int numEdition);
     int[] editionTrials(int numEdition);
     void deleteEdition(int numEdition);
+    boolean checkCurrentEdition();
+    int[] getCurrentEditionData();
+    int getCurrentYear();
+    void executeEdition(String[] players);
 }

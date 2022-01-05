@@ -1,6 +1,7 @@
 package com.company.persistence;
 
 import com.company.business.Edition;
+import com.company.business.Player;
 import com.company.business.Trial;
 import com.company.business.TrialPublicacionArticulo;
 
@@ -11,14 +12,20 @@ import java.util.Collections;
 
 public class EditionDAOcsv implements EditionDAO {
     private Path path;
+    private Path pathCurrent;
 
-    public EditionDAOcsv(String path) {
+    public EditionDAOcsv(String path, String pathCurrent) {
         try {
             Path p = Paths.get(path);       //ruta donde guardamos los archivos
+            Path p1 = Paths.get(pathCurrent);
             if (!Files.exists(p)) {
                 Files.createFile(p);
             }
+            if (!Files.exists(p1)) {
+                Files.createFile(p1);
+            }
             this.path = p;
+            this.pathCurrent = p1;
 
         } catch (IOException | InvalidPathException e) {
             e.getMessage();
@@ -100,6 +107,33 @@ public class EditionDAOcsv implements EditionDAO {
         }
     }
 
+    @Override
+    public void saveCurrent(Edition edition, Player[] players, int currentTrial) {
+        try {
+            Files.write(pathCurrent, Collections.singletonList(currentEditionToCSV(edition, players, currentTrial)), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String currentEditionToCSV(Edition edition, Player[] players, int currentTrial) {
+        int year = edition.getYear();
+        int numPlayers = edition.getNumPlayers();
+        String[] name = new String[numPlayers];
+        int[] PI = new int[numPlayers];
+        String data = year+","+numPlayers+",";
+
+        for (int i = 0; i < numPlayers; i++) {
+            name[i] = players[i].getName();
+            PI[i] = players[i].getPI();
+            data = data+name[i]+","+PI[i]+",";
+        }
+        data = data+currentTrial+";";
+
+        return data;
+    }
+
+
     //info a texto
     private String editionToCSV(Edition edition) {
         String file;
@@ -138,4 +172,6 @@ public class EditionDAOcsv implements EditionDAO {
 
         return t;
     }
+
+    //TODO COMPROVAR QUE EL AÑO QUE VAMOS A CARGAR ES EL AÑO EN EL QUE ESTAMOS AHORA MISMO
 }
