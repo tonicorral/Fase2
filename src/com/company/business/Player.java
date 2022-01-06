@@ -9,6 +9,11 @@ public class Player {
         this.PI = 5;
     }
 
+    public Player(String name, int PI) {
+        this.name = name;
+        this.PI = PI;
+    }
+
     public void addPI(int PI) {
         this.PI += PI;
     }

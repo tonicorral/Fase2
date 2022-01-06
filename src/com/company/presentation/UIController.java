@@ -111,14 +111,22 @@ public class UIController {
                             break;
                         case EXIT:
                             break;
+
                     }
+                    break;
                 case SELECT_CONDUCTOR:
                     if(bf.checkCurrentEdition()) {
                         int[] editionData = bf.getCurrentEditionData();
-                        bf.executeEdition(ui.askPlayers(editionData[0], editionData[1]));
+                        if (bf.loadCurrentEdition() == null){
+                            bf.executeEdition(ui.askPlayers(editionData[0], editionData[1]));
+                        }
+                        else{
+
+                        }
                     }
                     else {
                         ui.noCurrentEdition(bf.getCurrentYear());
+                        System.exit(0);
                     }
                     break;
 

@@ -17,4 +17,5 @@ public interface BusinessFacade {
     int[] getCurrentEditionData();
     int getCurrentYear();
     void executeEdition(String[] players);
+    Edition loadCurrentEdition();
 }

@@ -57,6 +57,32 @@ public class EditionManager {
     public void saveCurrentEdition(Edition edition, Player[] players, int currentTrial) {
         editionDAO.saveCurrent(edition, players, currentTrial);
     }
+    public Edition loadCurrentEdition(){
+        String edition = editionDAO.loadCurrent();
+        if(edition != null){
+            String[] data = edition.split(",");
+            int year = Integer.parseInt(data[0]);
+            if(year == Calendar.getInstance().get(Calendar.YEAR)) {
+                int numPlayers = Integer.parseInt(data[1]);
+                Player[] players = new Player[numPlayers];
+                int j = 2;
+                for (int i = 0; i < numPlayers; i++) {
+                    players[i] = new Player(data[j], Integer.parseInt(data[j+1]));
+                    j = j+2;
+                }
+                String[] b = data[data.length - 1].split(";");
+                int currentTrial = Integer.parseInt(b[0]);
+                Edition edition1 = getCurrentEdition();
+
+                edition1.setCurrentTrial(currentTrial);
+                edition1.setPlayers(players);
+
+                return edition1;
+            }
+        }
+        return null;
+    }
+
 
 }
 

@@ -116,6 +116,22 @@ public class EditionDAOcsv implements EditionDAO {
         }
     }
 
+    @Override
+    public String loadCurrent() {
+
+        try {
+            ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(pathCurrent));
+            if(fileContent.size() == 0){
+                return null;
+            }
+            return fileContent.get(0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private String currentEditionToCSV(Edition edition, Player[] players, int currentTrial) {
         int year = edition.getYear();
         int numPlayers = edition.getNumPlayers();

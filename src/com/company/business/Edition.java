@@ -6,12 +6,15 @@ public class Edition {
     private int numTrials;
     private TrialPublicacionArticulo[] trials;
     private int[] num;
+    private Player[] players;
+    private  int currentTrial;
 
-    public Edition(int year, int numPlayers, int numTrials, TrialPublicacionArticulo[] trials) {
-        this.year = year;
-        this.numPlayers = numPlayers;
-        this.numTrials = numTrials;
-        this.trials = trials;
+    public void setPlayers(Player[] players) {
+        this.players = players;
+    }
+
+    public void setCurrentTrial(int currentTrial) {
+        this.currentTrial = currentTrial;
     }
 
     public Edition(int year, int numPlayers, int numTrials, int[] num) {

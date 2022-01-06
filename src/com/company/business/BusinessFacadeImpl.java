@@ -2,6 +2,7 @@ package com.company.business;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
 public class BusinessFacadeImpl implements BusinessFacade{
     private final TrialManager trialManager;        //Solo una vez
@@ -122,7 +123,42 @@ public class BusinessFacadeImpl implements BusinessFacade{
 
     @Override
     public void executeEdition(String[] players) {
-        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(),savePlayers(players),0);
+       // editionManager.saveCurrentEdition(editionManager.getCurrentEdition(),savePlayers(players),0);
+        Edition edition = editionManager.getCurrentEdition();
+        TrialPublicacionArticulo[] trial = edition.getTrials();
+        Random random = new Random();
+        boolean b;
+        int quartilNum = trial[0].getQuartil().charAt(1);
+        for (int i = 0; i < edition.getNumPlayers(); i++) {
+            b = false;
+            if (random.nextInt(0,100) <= trial[0].getProbDenegar()){
+                while (b){
+                    if (random.nextInt(0,100) <= trial[0].getProbRevision()){
+                        b = true;
+                    }
+                }
+                if (random.nextInt(0,100) <= trial[0].getProbAceptar()){
+                    switch (quartilNum){
+                        case 1:
+
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    @Override
+    public Edition loadCurrentEdition() {
+        return editionManager.loadCurrentEdition();
     }
 
     private Player[] savePlayers(String[] names) {
