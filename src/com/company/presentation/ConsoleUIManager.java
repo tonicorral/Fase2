@@ -315,6 +315,19 @@ public class ConsoleUIManager implements UIManager {
         return names;
     }
 
+    @Override
+    public boolean askToContinue() {
+        while (true) {
+            String response = askString("Continue the execution? [yes/no]:");
+            if(response.equalsIgnoreCase("yes")){
+                return true;
+            }
+            else if(response.equalsIgnoreCase("no")){
+                return false;
+            }
+        }
+    }
+
 
 }
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class EditionManager {
-    EditionDAO editionDAO;
+    private EditionDAO editionDAO;
 
     public EditionManager() {
         editionDAO = new EditionDAOcsv("data/edition.csv", "data/currentEdition.csv");

@@ -109,8 +109,8 @@ public class EditionDAOcsv implements EditionDAO {
 
     @Override
     public void saveCurrent(Edition edition, Player[] players, int currentTrial) {
-        try {
-            Files.write(pathCurrent, Collections.singletonList(currentEditionToCSV(edition, players, currentTrial)), StandardOpenOption.APPEND);
+        try { //String a = ""
+            Files.write(pathCurrent, Collections.singletonList(currentEditionToCSV(edition, players, currentTrial)), StandardOpenOption.WRITE);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -121,7 +121,7 @@ public class EditionDAOcsv implements EditionDAO {
 
         try {
             ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(pathCurrent));
-            if(fileContent.size() == 0){
+            if(fileContent.size() == 0 || fileContent.get(0).equals("")){
                 return null;
             }
             return fileContent.get(0);
@@ -130,6 +130,16 @@ public class EditionDAOcsv implements EditionDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void emptyCurrent() {
+        try {
+            String a = "";
+            Files.write(pathCurrent, Collections.singletonList(a), StandardOpenOption.WRITE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private String currentEditionToCSV(Edition edition, Player[] players, int currentTrial) {

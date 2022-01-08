@@ -9,6 +9,14 @@ public class Edition {
     private Player[] players;
     private  int currentTrial;
 
+    public Player[] getPlayers() {
+        return players;
+    }
+
+    public int getCurrentTrial() {
+        return currentTrial;
+    }
+
     public void setPlayers(Player[] players) {
         this.players = players;
     }

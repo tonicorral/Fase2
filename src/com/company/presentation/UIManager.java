@@ -38,5 +38,6 @@ public interface UIManager {
     int askInt(String text, int min, int max);
     void noCurrentEdition(int year);
     String[] askPlayers(int year, int numPlayers);
+    boolean askToContinue();
     }
 

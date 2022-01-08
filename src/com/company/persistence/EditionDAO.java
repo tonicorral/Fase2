@@ -11,5 +11,6 @@ public interface EditionDAO {
     void delete(int numEdition);
     void saveCurrent(Edition edition, Player[] players, int currentTrial);
     String loadCurrent();
+    void emptyCurrent();
 
 }

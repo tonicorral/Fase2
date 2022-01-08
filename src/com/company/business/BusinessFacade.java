@@ -16,6 +16,8 @@ public interface BusinessFacade {
     boolean checkCurrentEdition();
     int[] getCurrentEditionData();
     int getCurrentYear();
-    void executeEdition(String[] players);
+    String[] executeEdition();
+    String[] startEdition(String[] players);
     Edition loadCurrentEdition();
+    boolean checkEditionFinish();
 }

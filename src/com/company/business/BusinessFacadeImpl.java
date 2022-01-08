@@ -122,43 +122,135 @@ public class BusinessFacadeImpl implements BusinessFacade{
     }
 
     @Override
-    public void executeEdition(String[] players) {
-       // editionManager.saveCurrentEdition(editionManager.getCurrentEdition(),savePlayers(players),0);
-        Edition edition = editionManager.getCurrentEdition();
-        TrialPublicacionArticulo[] trial = edition.getTrials();
-        Random random = new Random();
-        boolean b;
-        int quartilNum = trial[0].getQuartil().charAt(1);
+    public String[] executeEdition() {
+        Edition edition = addEditionTrial(loadCurrentEdition());
+        Player[] players1 = executeTrial(edition.getTrials()[edition.getCurrentTrial()], edition.getPlayers());
+        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(), players1, edition.getCurrentTrial()+1);
+        String[] results = new String[3+edition.getNumPlayers()*4];
+        results[0] = edition.getTrials()[edition.getCurrentTrial()].getNombre();
+        results[1] = String.valueOf(edition.getCurrentTrial());
+        results[2] = String.valueOf(edition.getNumPlayers());
+        int j = 3;
         for (int i = 0; i < edition.getNumPlayers(); i++) {
-            b = false;
-            if (random.nextInt(0,100) <= trial[0].getProbDenegar()){
-                while (b){
-                    if (random.nextInt(0,100) <= trial[0].getProbRevision()){
-                        b = true;
-                    }
-                }
-                if (random.nextInt(0,100) <= trial[0].getProbAceptar()){
-                    switch (quartilNum){
-                        case 1:
-
-                            break;
-                        case 2:
-                            break;
-                        case 3:
-                            break;
-                        case 4:
-                            break;
-                    }
-                }
-            }
-
+            results[j] = players1[i].getName();
+            j++;
+            results[j] = String.valueOf(players1[i].getCounter());
+            j++;
+            results[j] = String.valueOf(players1[i].getWin());
+            j++;
+            results[j] = String.valueOf(players1[i].getPI());
+            j++;
         }
 
+        return results;
     }
 
+
+    @Override
+    public String[] startEdition(String[] players) {
+        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(),savePlayers(players),0);
+        Edition edition = addEditionTrial(editionManager.loadCurrentEdition());
+        Player[] players1 = executeTrial(edition.getTrials()[0], savePlayers(players));
+        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(), players1, 1);
+        String[] results = new String[3+edition.getNumPlayers()*4];
+        results[0] = edition.getTrials()[0].getNombre();
+        results[1] = "1";
+        results[2] = String.valueOf(edition.getNumPlayers());
+        int j = 3;
+        for (int i = 0; i < edition.getNumPlayers(); i++) {
+            results[j] = players1[i].getName();
+            j++;
+            results[j] = String.valueOf(players1[i].getCounter());
+            j++;
+            results[j] = String.valueOf(players1[i].getWin());
+            j++;
+            results[j] = String.valueOf(players1[i].getPI());
+            j++;
+        }
+
+        return results;
+    }
+
+    private Player[] executeTrial (TrialPublicacionArticulo trial, Player[] player){
+
+        Random random = new Random();
+        boolean b;
+        char quartilNum = trial.getQuartil().charAt(1);
+        System.out.println(quartilNum);
+        for (int i = 0; i < player.length; i++) {
+            int counter = 0;
+            do{
+                b = false;
+                if (random.nextInt(0,100) <= trial.getProbAceptar()) {
+                    switch (quartilNum){
+                        case '1':
+                            player[i].addPI(4);
+                            System.out.println("a");
+                            break;
+                        case '2':
+                            player[i].addPI(3);
+                            System.out.println("b");
+                            break;
+                        case '3':
+                            player[i].addPI(2);
+                            System.out.println("c");
+                            break;
+                        case '4':
+                            player[i].addPI(1);
+                            System.out.println("d");
+                            break;
+                    }
+                    player[i].setWin(true);
+                    b = true;
+                }
+                else if (random.nextInt(0,100) <= trial.getProbDenegar()){
+                    switch (quartilNum){
+                        case '1':
+                            player[i].addPI(-5);
+                            break;
+                        case '2':
+                            player[i].addPI(-4);
+                            break;
+                        case '3':
+                            player[i].addPI(-3);
+                            break;
+                        case '4':
+                            player[i].addPI(-2);
+                            break;
+                    }
+                    player[i].setWin(false);
+                    b = true;
+                }
+                counter = counter + 1;
+            }while (!b);
+            player[i].setCounter(counter);
+
+        }
+        return player;
+    }
+    private Edition addEditionTrial(Edition edition) {
+        TrialPublicacionArticulo[] trials = new TrialPublicacionArticulo[edition.getNumTrials()];
+
+        for (int i = 0; i < edition.getNumTrials(); i++) {
+            String[] prueba = trialManager.infoPrueba(edition.getNum()[i]);         //pillamos todos los datos de la prueba
+            trials[i] = trialManager.crearPruebaPublicacion(prueba[0], prueba[1], prueba[2], Integer.parseInt(prueba[3]),
+                    Integer.parseInt(prueba[4]), Integer.parseInt(prueba[5]));
+        }
+        edition.setTrials(trials);
+        return edition;
+    }
     @Override
     public Edition loadCurrentEdition() {
         return editionManager.loadCurrentEdition();
+    }
+
+    @Override
+    public boolean checkEditionFinish() {
+        Edition edition = loadCurrentEdition();
+        if(edition.getNumTrials()-1 == edition.getCurrentTrial()){
+            return true;
+        }
+        return false;
     }
 
     private Player[] savePlayers(String[] names) {

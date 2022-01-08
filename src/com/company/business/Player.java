@@ -1,8 +1,26 @@
 package com.company.business;
 
 public class Player {
-    String name;
-    int PI;
+    private String name;
+    private int PI;
+    private int counter;
+    private boolean win;
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
+
+    public boolean getWin() {
+        return win;
+    }
+
+    public void setWin(boolean win) {
+        this.win = win;
+    }
 
     public Player(String name) {
         this.name = name;
@@ -15,7 +33,7 @@ public class Player {
     }
 
     public void addPI(int PI) {
-        this.PI += PI;
+        this.PI = this.PI + PI;
     }
 
     public String getName() {

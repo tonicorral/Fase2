@@ -115,20 +115,35 @@ public class UIController {
                     }
                     break;
                 case SELECT_CONDUCTOR:
-                    if(bf.checkCurrentEdition()) {
-                        int[] editionData = bf.getCurrentEditionData();
-                        if (bf.loadCurrentEdition() == null){
-                            bf.executeEdition(ui.askPlayers(editionData[0], editionData[1]));
+                    do{
+                        if(bf.checkCurrentEdition()) {
+                            int[] editionData = bf.getCurrentEditionData();
+                            if (bf.loadCurrentEdition() == null){
+                                bf.startEdition(ui.askPlayers(editionData[0], editionData[1]));
+                                if(!ui.askToContinue()){
+                                    System.out.println("adeu");
+                                    System.exit(0);
+                                }
+                            }
+                            else{
+                                if(!bf.checkEditionFinish()){
+                                    bf.executeEdition();
+                                    if(!ui.askToContinue()){
+                                        System.out.println("adeu");
+                                        System.exit(0);
+                                    }
+                                }
+                                else{
+                                    System.out.println("borrar archivo");
+                                    System.exit(0);
+                                }
+                            }
                         }
-                        else{
-
+                        else {
+                            ui.noCurrentEdition(bf.getCurrentYear());
+                            System.exit(0);
                         }
-                    }
-                    else {
-                        ui.noCurrentEdition(bf.getCurrentYear());
-                        System.exit(0);
-                    }
-                    break;
+                    }while (true);
 
             }
         }
