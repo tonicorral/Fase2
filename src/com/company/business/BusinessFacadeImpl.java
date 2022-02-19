@@ -7,12 +7,10 @@ import java.util.Random;
 public class BusinessFacadeImpl implements BusinessFacade{
     private final TrialManager trialManager;        //Solo una vez
     private final EditionManager editionManager;
-    private final ConductorManager conductorManager;
 
     public BusinessFacadeImpl() {
         trialManager = new TrialManager();
         editionManager = new EditionManager();
-        conductorManager = new ConductorManager();
     }
 
     @Override   //Le passa los datos al manager para crear la prueba
@@ -123,16 +121,25 @@ public class BusinessFacadeImpl implements BusinessFacade{
 
     @Override
     public String[] executeEdition() {
+
         Edition edition = addEditionTrial(loadCurrentEdition());
         Player[] players1 = executeTrial(edition.getTrials()[edition.getCurrentTrial()], edition.getPlayers());
         editionManager.saveCurrentEdition(editionManager.getCurrentEdition(), players1, edition.getCurrentTrial()+1);
+
         String[] results = new String[3+edition.getNumPlayers()*4];
         results[0] = edition.getTrials()[edition.getCurrentTrial()].getNombre();
-        results[1] = String.valueOf(edition.getCurrentTrial());
+        results[1] = String.valueOf(edition.getCurrentTrial()+1);
         results[2] = String.valueOf(edition.getNumPlayers());
+
         int j = 3;
+
         for (int i = 0; i < edition.getNumPlayers(); i++) {
-            results[j] = players1[i].getName();
+            if(players1[i].getCounter() == -1) {
+                results[j] = players1[i].getName()+"*";
+            }
+            else {
+                results[j] = players1[i].getName();
+            }
             j++;
             results[j] = String.valueOf(players1[i].getCounter());
             j++;
@@ -152,11 +159,14 @@ public class BusinessFacadeImpl implements BusinessFacade{
         Edition edition = addEditionTrial(editionManager.loadCurrentEdition());
         Player[] players1 = executeTrial(edition.getTrials()[0], savePlayers(players));
         editionManager.saveCurrentEdition(editionManager.getCurrentEdition(), players1, 1);
+
         String[] results = new String[3+edition.getNumPlayers()*4];
         results[0] = edition.getTrials()[0].getNombre();
         results[1] = "1";
         results[2] = String.valueOf(edition.getNumPlayers());
+
         int j = 3;
+
         for (int i = 0; i < edition.getNumPlayers(); i++) {
             results[j] = players1[i].getName();
             j++;
@@ -176,56 +186,60 @@ public class BusinessFacadeImpl implements BusinessFacade{
         Random random = new Random();
         boolean b;
         char quartilNum = trial.getQuartil().charAt(1);
-        System.out.println(quartilNum);
+
         for (int i = 0; i < player.length; i++) {
             int counter = 0;
-            do{
-                b = false;
-                if (random.nextInt(0,100) <= trial.getProbAceptar()) {
-                    switch (quartilNum){
-                        case '1':
-                            player[i].addPI(4);
-                            System.out.println("a");
-                            break;
-                        case '2':
-                            player[i].addPI(3);
-                            System.out.println("b");
-                            break;
-                        case '3':
-                            player[i].addPI(2);
-                            System.out.println("c");
-                            break;
-                        case '4':
-                            player[i].addPI(1);
-                            System.out.println("d");
-                            break;
-                    }
-                    player[i].setWin(true);
-                    b = true;
-                }
-                else if (random.nextInt(0,100) <= trial.getProbDenegar()){
-                    switch (quartilNum){
-                        case '1':
-                            player[i].addPI(-5);
-                            break;
-                        case '2':
-                            player[i].addPI(-4);
-                            break;
-                        case '3':
-                            player[i].addPI(-3);
-                            break;
-                        case '4':
-                            player[i].addPI(-2);
-                            break;
-                    }
-                    player[i].setWin(false);
-                    b = true;
-                }
-                counter = counter + 1;
-            }while (!b);
-            player[i].setCounter(counter);
 
+            if(player[i].getPI() <= 0) {
+                player[i].setCounter(-1);
+            }
+            else{
+                do {
+                    b = false;
+                    if (random.nextInt(100) <= trial.getProbAceptar()) {
+                        switch (quartilNum){
+                            case '1':
+                                player[i].addPI(4);
+                                break;
+                            case '2':
+                                player[i].addPI(3);
+                                break;
+                            case '3':
+                                player[i].addPI(2);
+                                break;
+                            case '4':
+                                player[i].addPI(1);
+                                break;
+                        }
+                        player[i].setWin(true);
+                        b = true;
+                    }
+                    else if (random.nextInt(100) <= trial.getProbDenegar()) {
+                        switch (quartilNum) {
+                            case '1':
+                                player[i].addPI(-5);
+                                break;
+                            case '2':
+                                player[i].addPI(-4);
+                                break;
+                            case '3':
+                                player[i].addPI(-3);
+                                break;
+                            case '4':
+                                player[i].addPI(-2);
+                                break;
+                        }
+                        player[i].setWin(false);
+                        b = true;
+                    }
+                    counter = counter + 1;
+                }while (!b);
+
+                player[i].setCounter(counter);
+
+            }
         }
+
         return player;
     }
     private Edition addEditionTrial(Edition edition) {
@@ -247,10 +261,15 @@ public class BusinessFacadeImpl implements BusinessFacade{
     @Override
     public boolean checkEditionFinish() {
         Edition edition = loadCurrentEdition();
-        if(edition.getNumTrials()-1 == edition.getCurrentTrial()){
+        if(edition.getNumTrials() == edition.getCurrentTrial()){
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void clearCurrentEdition() {
+        editionManager.clearCurrentEdition();
     }
 
     private Player[] savePlayers(String[] names) {

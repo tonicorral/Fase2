@@ -83,6 +83,10 @@ public class EditionManager {
         return null;
     }
 
+    public void clearCurrentEdition() {
+        editionDAO.emptyCurrent();
+    }
+
 
 }
 

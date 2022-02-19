@@ -20,4 +20,5 @@ public interface BusinessFacade {
     String[] startEdition(String[] players);
     Edition loadCurrentEdition();
     boolean checkEditionFinish();
+    void clearCurrentEdition();
 }

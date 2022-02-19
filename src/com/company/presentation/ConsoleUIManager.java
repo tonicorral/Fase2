@@ -5,13 +5,28 @@ import java.util.Scanner;
 public class ConsoleUIManager implements UIManager {
     private Scanner scanner;
 
+    //TRIALS
+    public static final String askTrialName = "Enter the trial’s name:";
+    public static final String askTrialJournal = "Enter the journal's name:";
+    public static final String askTrialQuartile = "Enter the journal’s quartile:";
+    public static final String askAccessProb = "Enter the acceptance probability:";
+    public static final String askRevProb = "Enter the revision probability:";
+    public static final String askRejProb = "Enter the rejection probability:";
+
+    //EDITIONS
+    public static final String askEditionYear = "Enter the edition’s year:";
+    public static final String askEditionPlayers = "Enter the initial number of players:";
+    public static final String askEditionNumberTrials = "Enter the number of trials:";
+    public static final String askDuplicateYear = "Enter the new edition’s year:";
+    public static final String askDuplicateNumPlayers = "Enter the new edition’s initial number of players:";
+
     public ConsoleUIManager() {
         this.scanner = new Scanner(System.in);      //crear scanner para leer lo que ponga el usuario
     }
     @Override
     public MenuOptions showRoles() {
         while (true) {
-            System.out.println("Welcome to The Trials. Who are you?\n");
+            System.out.println("\nWelcome to The Trials. Who are you?\n");
             System.out.println("    A) The Composer");
             System.out.println("    B) This year's Conductor\n");
 
@@ -169,9 +184,12 @@ public class ConsoleUIManager implements UIManager {
 
     }
 
-    //TODO Comprovar que hay al menos 3 pruebas creadas
     @Override
     public int[] pickEditionTrials(String[] nameTrial, int numPruebas) {
+        if(nameTrial.length < 3) {
+            int[] num = {-1};
+            return num;
+        }
         int i;
         System.out.println("\n\t--- Trials ---\n");
         for (i = 0; i < nameTrial.length; i++) {
@@ -180,11 +198,10 @@ public class ConsoleUIManager implements UIManager {
 
         int[] nums = new int[numPruebas];
         for (int j = 0; j < numPruebas; j++) {
-            System.out.println("Pick a trial ("+(j+1)+"/"+numPruebas+"):");
-            nums[j] = askInt();
+            nums[j] = askInt("Pick a trial ("+(j+1)+"/"+numPruebas+"):", 1, numPruebas);
         }
 
-        System.out.println("\nThe edition was created successfully!\n");
+        System.out.println("\nThe edition was created successfully!");
         return nums;
     }
 
@@ -318,7 +335,7 @@ public class ConsoleUIManager implements UIManager {
     @Override
     public boolean askToContinue() {
         while (true) {
-            String response = askString("Continue the execution? [yes/no]:");
+            String response = askString("\nContinue the execution? [yes/no]:");
             if(response.equalsIgnoreCase("yes")){
                 return true;
             }
@@ -328,6 +345,80 @@ public class ConsoleUIManager implements UIManager {
         }
     }
 
+    @Override
+    public void showResults(String[] results) {
+        System.out.println("\nTrial #"+results[1]+" - "+results[0]+"\n");
+        int numPlayers = Integer.parseInt(results[2]);
+
+        for (int i = 3; i < results.length; i++) {
+            if(results[i].charAt(results[i].length()-1) == '*') {
+                String name = results[i].substring(0,results[i].length()-1);
+                System.out.println(name+" is disqualified");
+                i++;
+                i++;
+                i++;
+            }
+            else {
+                System.out.print(results[i]+" is submitting...");
+                i++;
+
+                int counter = Integer.parseInt(results[i]);
+                for (int j = 0; j < counter; j++) {
+                    System.out.print(" Revisions...");
+                }
+                i++;
+
+                if(results[i] == "true") {
+                    System.out.print(" Accepted!");
+                }
+                else {
+                    System.out.print(" Rejected.");
+                }
+                i++;
+
+                int pi = Integer.parseInt(results[i]);
+                if (pi > 0) {
+                    System.out.println(" PI count: "+pi);
+                }
+                else {
+                    System.out.println(" PI count: 0 - Disqualified!");
+                }
+            }
+        }
+    }
+
+    @Override
+    public void exitProgram() {
+        System.out.println("Saving & Shutting down...");
+    }
+
+    @Override
+    public void showEditionResult(String[] results, int year) {
+        boolean r = false;
+
+        for (int i = 3; i < results.length; i++) {
+            i++;
+            i++;
+            i++;
+            int pi = Integer.parseInt(results[i]);
+            if(pi > 0) {
+                r = true;
+            }
+        }
+        System.out.print("\nTHE TRIALS "+year+" HAVE ENDED - ");
+        if(r) {
+            System.out.println("PLAYERS WON\n");
+        }
+        else {
+            System.out.println("PLAYERS LOSE\n");
+        }
+        System.out.println("Shutting down...");
+    }
+
+    @Override
+    public void showTrialERROR() {
+        System.out.println("There must be at least 3 trials to create a edition!");
+    }
 
 }
 

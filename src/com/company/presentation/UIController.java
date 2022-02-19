@@ -36,12 +36,12 @@ public class UIController {
                                 case CREATE_TRIALS:
                                     //ConsoleUIManager pide los datos al usuario
                                     ui.showTrialsTypes();
-                                    trialName = ui.askString(ui.askTrialName);
-                                    journalNme = ui.askString(ui.askTrialJournal);
-                                    quartile = ui.askString(ui.askTrialQuartile);
-                                    acc = ui.askInt(ui.askAccessProb, 0 , 100);
-                                    rev = ui.askInt(ui.askRevProb, 0, 100);
-                                    rej = ui.askInt(ui.askRejProb, 0 , 100);
+                                    trialName = ui.askString(ConsoleUIManager.askTrialName);
+                                    journalNme = ui.askString(ConsoleUIManager.askTrialJournal);
+                                    quartile = ui.askString(ConsoleUIManager.askTrialQuartile);
+                                    acc = ui.askInt(ConsoleUIManager.askAccessProb, 0 , 100);
+                                    rev = ui.askInt(ConsoleUIManager.askRevProb, 0, 100);
+                                    rej = ui.askInt(ConsoleUIManager.askRejProb, 0 , 100);
                                     //Le decimos al DAO de business que cree la trial
                                     bf.createTrial(trialName, journalNme, quartile, acc, rev, rej);
                                     break;
@@ -73,12 +73,16 @@ public class UIController {
                             switch (ui.menuEditions()){
                                 case CREATE_EDITION:
                                     //pedimos info
-                                    año = ui.askInt(ui.askEditionYear, 1000, 9999);
-                                    numJugadores = ui.askInt(ui.askEditionPlayers, 1, 5);
-                                    numPruebas= ui.askInt(ui.askEditionNumberTrials, 3, 12);
+                                    año = ui.askInt(ConsoleUIManager.askEditionYear, 1000, 9999);
+                                    numJugadores = ui.askInt(ConsoleUIManager.askEditionPlayers, 1, 5);
+                                    numPruebas= ui.askInt(ConsoleUIManager.askEditionNumberTrials, 3, 12);
                                     seleccionPruebas = ui.pickEditionTrials(bf.trialsNames(), numPruebas);
-                                    //creamos edicion
-                                    bf.createEdition(año, numJugadores, numPruebas, seleccionPruebas);
+                                    if(seleccionPruebas[0] == -1) {
+                                        ui.showTrialERROR();
+                                    }
+                                    else {
+                                        bf.createEdition(año, numJugadores, numPruebas, seleccionPruebas);
+                                    }
                                     break;
 
                                 case LIST_EDITIONS:
@@ -92,8 +96,8 @@ public class UIController {
                                     ui.showEditionMessage(MenuOptions.DUPLICATE_EDITION);
                                     int numEditionDuplicate = ui.showEditionYears(bf.editionYear());
                                     if(!bf.exitEdition(numEditionDuplicate)) {
-                                        int numDuplicateYear = ui.askInt(ui.askDuplicateYear, 1000, 9999);
-                                        int numDuplicatePlayer = ui.askInt(ui.askDuplicateNumPlayers, 1 , 5);
+                                        int numDuplicateYear = ui.askInt(ConsoleUIManager.askDuplicateYear, 1000, 9999);
+                                        int numDuplicatePlayer = ui.askInt(ConsoleUIManager.askDuplicateNumPlayers, 1 , 5);
                                         int[] numDuplicateNum = bf.editionTrials(numEditionDuplicate);
                                         bf.createEdition(numDuplicateYear, numDuplicatePlayer, numDuplicateNum.length, numDuplicateNum);
                                     }
@@ -115,26 +119,33 @@ public class UIController {
                     }
                     break;
                 case SELECT_CONDUCTOR:
-                    do{
+                    String[] results;
+                    do {
                         if(bf.checkCurrentEdition()) {
                             int[] editionData = bf.getCurrentEditionData();
-                            if (bf.loadCurrentEdition() == null){
-                                bf.startEdition(ui.askPlayers(editionData[0], editionData[1]));
-                                if(!ui.askToContinue()){
-                                    System.out.println("adeu");
+                            if (bf.loadCurrentEdition() == null) {
+                                results = bf.startEdition(ui.askPlayers(editionData[0], editionData[1]));
+                                ui.showResults(results);
+                                if(!ui.askToContinue()) {
+                                    ui.exitProgram();
                                     System.exit(0);
                                 }
                             }
-                            else{
-                                if(!bf.checkEditionFinish()){
-                                    bf.executeEdition();
-                                    if(!ui.askToContinue()){
-                                        System.out.println("adeu");
+                            else {
+                                if(!bf.checkEditionFinish()) {
+                                    results = bf.executeEdition();
+                                    ui.showResults(results);
+                                    if(bf.checkEditionFinish()) {
+                                        ui.showEditionResult(results, bf.getCurrentYear());
+                                        bf.clearCurrentEdition();
+                                        System.exit(0);
+                                    }
+                                    else if(!ui.askToContinue()) {
+                                        ui.exitProgram();
                                         System.exit(0);
                                     }
                                 }
-                                else{
-                                    System.out.println("borrar archivo");
+                                else {
                                     System.exit(0);
                                 }
                             }

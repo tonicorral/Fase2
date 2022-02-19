@@ -136,7 +136,7 @@ public class EditionDAOcsv implements EditionDAO {
     public void emptyCurrent() {
         try {
             String a = "";
-            Files.write(pathCurrent, Collections.singletonList(a), StandardOpenOption.WRITE);
+            Files.write(pathCurrent, Collections.singletonList(a), StandardOpenOption.DELETE_ON_CLOSE);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -199,5 +199,4 @@ public class EditionDAOcsv implements EditionDAO {
         return t;
     }
 
-    //TODO COMPROVAR QUE EL AÑO QUE VAMOS A CARGAR ES EL AÑO EN EL QUE ESTAMOS AHORA MISMO
 }
