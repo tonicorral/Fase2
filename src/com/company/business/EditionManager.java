@@ -67,8 +67,8 @@ public class EditionManager {
                 Player[] players = new Player[numPlayers];
                 int j = 2;
                 for (int i = 0; i < numPlayers; i++) {
-                    players[i] = new Player(data[j], Integer.parseInt(data[j+1]));
-                    j = j+2;
+                    players[i] = new Player(data[j], Integer.parseInt(data[j+1]), Integer.parseInt(data[j+2]));
+                    j = j+3;
                 }
                 String[] b = data[data.length - 1].split(";");
                 int currentTrial = Integer.parseInt(b[0]);

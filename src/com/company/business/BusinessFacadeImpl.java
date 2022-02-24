@@ -15,7 +15,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
 
     @Override   //Le passa los datos al manager para crear la prueba
     public void createTrial(String trialName, String trialJournal, String quartile, int acc, int rev, int rej) {
-        trialManager.crearPruebaPublicacion(trialName, trialJournal, quartile, acc, rev, rej);
+        trialManager.crearPruebaPublicacion(trialName, trialJournal, quartile, acc, rev, rej,true);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
         for (int i = 0; i < edition.getNumTrials(); i++) {
             String[] prueba = trialManager.infoPrueba(edition.getNum()[i]);         //pillamos todos los datos de la prueba
             trials[i] = trialManager.crearPruebaPublicacion(prueba[0], prueba[1], prueba[2], Integer.parseInt(prueba[3]),
-                    Integer.parseInt(prueba[4]), Integer.parseInt(prueba[5]));
+                    Integer.parseInt(prueba[4]), Integer.parseInt(prueba[5]), false);
         }
         edition.setTrials(trials);
         return edition;
@@ -123,16 +123,30 @@ public class BusinessFacadeImpl implements BusinessFacade{
     public String[] executeEdition() {
 
         Edition edition = addEditionTrial(loadCurrentEdition());
+        Player[] players0 = edition.getPlayers();
+        int[] type = new int[edition.getNumPlayers()];
+        for (int i = 0; i < edition.getNumPlayers(); i++) {
+            type[i] = players0[i].getType();
+        }
         Player[] players1 = executeTrial(edition.getTrials()[edition.getCurrentTrial()], edition.getPlayers());
         editionManager.saveCurrentEdition(editionManager.getCurrentEdition(), players1, edition.getCurrentTrial()+1);
 
-        String[] results = new String[3+edition.getNumPlayers()*4];
+        int[] types = new int[edition.getNumPlayers()];
+        for (int i = 0; i < edition.getNumPlayers(); i++) {
+            if(players1[i].getType() > type[i]) {
+                types[i] = players1[i].getType();
+            }
+            else {
+                types[i] = 0;
+            }
+        }
+
+        String[] results = new String[3+edition.getNumPlayers()*5];
         results[0] = edition.getTrials()[edition.getCurrentTrial()].getNombre();
         results[1] = String.valueOf(edition.getCurrentTrial()+1);
         results[2] = String.valueOf(edition.getNumPlayers());
 
         int j = 3;
-
         for (int i = 0; i < edition.getNumPlayers(); i++) {
             if(players1[i].getCounter() == -1) {
                 results[j] = players1[i].getName()+"*";
@@ -147,6 +161,8 @@ public class BusinessFacadeImpl implements BusinessFacade{
             j++;
             results[j] = String.valueOf(players1[i].getPI());
             j++;
+            results[j] = String.valueOf(types[i]);
+            j++;
         }
 
         return results;
@@ -157,10 +173,25 @@ public class BusinessFacadeImpl implements BusinessFacade{
     public String[] startEdition(String[] players) {
         editionManager.saveCurrentEdition(editionManager.getCurrentEdition(),savePlayers(players),0);
         Edition edition = addEditionTrial(editionManager.loadCurrentEdition());
+        Player[] players0 = edition.getPlayers();
         Player[] players1 = executeTrial(edition.getTrials()[0], savePlayers(players));
         editionManager.saveCurrentEdition(editionManager.getCurrentEdition(), players1, 1);
 
-        String[] results = new String[3+edition.getNumPlayers()*4];
+        int[] types = new int[edition.getNumPlayers()];
+        for (int i = 0; i < edition.getNumPlayers(); i++) {
+            System.out.println(players1[i].getType());
+            System.out.println(players0[i].getType());
+
+            if(players1[i].getType() > players0[i].getType()) {
+                types[i] = players1[i].getType();
+                System.out.println("esta dentro");
+            }
+            else {
+                types[i] = 0;
+            }
+        }
+
+        String[] results = new String[3+edition.getNumPlayers()*5];
         results[0] = edition.getTrials()[0].getNombre();
         results[1] = "1";
         results[2] = String.valueOf(edition.getNumPlayers());
@@ -175,6 +206,8 @@ public class BusinessFacadeImpl implements BusinessFacade{
             results[j] = String.valueOf(players1[i].getWin());
             j++;
             results[j] = String.valueOf(players1[i].getPI());
+            j++;
+            results[j] = String.valueOf(types[i]);
             j++;
         }
 
@@ -199,16 +232,36 @@ public class BusinessFacadeImpl implements BusinessFacade{
                     if (random.nextInt(100) <= trial.getProbAceptar()) {
                         switch (quartilNum){
                             case '1':
-                                player[i].addPI(4);
+                                if(player[i].getType() != 2) {
+                                    player[i].addPI(4);
+                                }
+                                else {
+                                    player[i].addPI(8);
+                                }
                                 break;
                             case '2':
-                                player[i].addPI(3);
+                                if(player[i].getType() != 2) {
+                                    player[i].addPI(3);
+                                }
+                                else {
+                                    player[i].addPI(6);
+                                }
                                 break;
                             case '3':
-                                player[i].addPI(2);
+                                if(player[i].getType() != 2) {
+                                    player[i].addPI(2);
+                                }
+                                else {
+                                    player[i].addPI(4);
+                                }
                                 break;
                             case '4':
-                                player[i].addPI(1);
+                                if(player[i].getType() != 2) {
+                                    player[i].addPI(1);
+                                }
+                                else {
+                                    player[i].addPI(2);
+                                }
                                 break;
                         }
                         player[i].setWin(true);
@@ -217,16 +270,36 @@ public class BusinessFacadeImpl implements BusinessFacade{
                     else if (random.nextInt(100) <= trial.getProbDenegar()) {
                         switch (quartilNum) {
                             case '1':
-                                player[i].addPI(-5);
+                                if(player[i].getType() != 0) {
+                                    player[i].addPI(-3);
+                                }
+                                else {
+                                    player[i].addPI(-5);
+                                }
                                 break;
                             case '2':
-                                player[i].addPI(-4);
+                                if(player[i].getType() != 0) {
+                                    player[i].addPI(-2);
+                                }
+                                else {
+                                    player[i].addPI(-4);
+                                }
                                 break;
                             case '3':
-                                player[i].addPI(-3);
+                                if(player[i].getType() != 0) {
+                                    player[i].addPI(-2);
+                                }
+                                else {
+                                    player[i].addPI(-3);
+                                }
                                 break;
                             case '4':
-                                player[i].addPI(-2);
+                                if(player[i].getType() != 0) {
+                                    player[i].addPI(-1);
+                                }
+                                else {
+                                    player[i].addPI(-2);
+                                }
                                 break;
                         }
                         player[i].setWin(false);
@@ -238,6 +311,13 @@ public class BusinessFacadeImpl implements BusinessFacade{
                 player[i].setCounter(counter);
 
             }
+            if(player[i].getType() != 2) {
+                if(player[i].getPI() >= 10) {
+                    player[i].setType(player[i].getType() + 1);
+                    player[i].setPI(5);
+
+                }
+            }
         }
 
         return player;
@@ -248,7 +328,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
         for (int i = 0; i < edition.getNumTrials(); i++) {
             String[] prueba = trialManager.infoPrueba(edition.getNum()[i]);         //pillamos todos los datos de la prueba
             trials[i] = trialManager.crearPruebaPublicacion(prueba[0], prueba[1], prueba[2], Integer.parseInt(prueba[3]),
-                    Integer.parseInt(prueba[4]), Integer.parseInt(prueba[5]));
+                    Integer.parseInt(prueba[4]), Integer.parseInt(prueba[5]), false);
         }
         edition.setTrials(trials);
         return edition;

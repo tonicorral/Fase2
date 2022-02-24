@@ -13,12 +13,14 @@ public class TrialManager {
     }
 
     public TrialPublicacionArticulo crearPruebaPublicacion(String nombrePrueba, String nombreRevista, String quartil, int probAceptar,
-                                       int probRevision, int probDenegar) {
+                                       int probRevision, int probDenegar, boolean save) {
 
         TrialPublicacionArticulo prueba = new TrialPublicacionArticulo(nombrePrueba, nombreRevista, quartil, probAceptar,
                 probRevision, probDenegar);
+        if(save) {
+            trialDAO.save(prueba);
+        }
 
-        trialDAO.save(prueba);
 
         return prueba;
     }

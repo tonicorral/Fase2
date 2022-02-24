@@ -5,6 +5,7 @@ public class Player {
     private int PI;
     private int counter;
     private boolean win;
+    private int type;
 
     public int getCounter() {
         return counter;
@@ -25,11 +26,26 @@ public class Player {
     public Player(String name) {
         this.name = name;
         this.PI = 5;
+        this.type = 0;
+
     }
 
-    public Player(String name, int PI) {
+    public void setPI(int PI) {
+        this.PI = PI;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public Player(String name, int PI, int type) {
         this.name = name;
         this.PI = PI;
+        this.type = type;
     }
 
     public void addPI(int PI) {

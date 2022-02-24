@@ -349,17 +349,22 @@ public class ConsoleUIManager implements UIManager {
     public void showResults(String[] results) {
         System.out.println("\nTrial #"+results[1]+" - "+results[0]+"\n");
         int numPlayers = Integer.parseInt(results[2]);
-
+        int[] types = new int[numPlayers];
+        int k = 0;
+        String[] names = new String[numPlayers];
         for (int i = 3; i < results.length; i++) {
             if(results[i].charAt(results[i].length()-1) == '*') {
                 String name = results[i].substring(0,results[i].length()-1);
                 System.out.println(name+" is disqualified");
+                names[k] = name;
+                i++;
                 i++;
                 i++;
                 i++;
             }
             else {
                 System.out.print(results[i]+" is submitting...");
+                names[k] = results[i];
                 i++;
 
                 int counter = Integer.parseInt(results[i]);
@@ -383,7 +388,19 @@ public class ConsoleUIManager implements UIManager {
                 else {
                     System.out.println(" PI count: 0 - Disqualified!");
                 }
+                i++;
+                types[k] = Integer.parseInt(results[i]);
             }
+            k++;
+        }
+        for (int i = 0; i < numPlayers; i++) {
+            if(types[i] == 1) {
+                System.out.println(names[i]+" is now a master (with 5 PI).");
+            }
+            else if(types[i] == 2) {
+                System.out.println(names[i]+" is now a doctor (with 5 PI).");
+            }
+
         }
     }
 
@@ -404,6 +421,7 @@ public class ConsoleUIManager implements UIManager {
             if(pi > 0) {
                 r = true;
             }
+            i++;
         }
         System.out.print("\nTHE TRIALS "+year+" HAVE ENDED - ");
         if(r) {

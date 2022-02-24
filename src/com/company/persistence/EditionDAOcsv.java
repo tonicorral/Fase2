@@ -147,12 +147,14 @@ public class EditionDAOcsv implements EditionDAO {
         int numPlayers = edition.getNumPlayers();
         String[] name = new String[numPlayers];
         int[] PI = new int[numPlayers];
+        int [] type = new int[numPlayers];
         String data = year+","+numPlayers+",";
 
         for (int i = 0; i < numPlayers; i++) {
             name[i] = players[i].getName();
             PI[i] = players[i].getPI();
-            data = data+name[i]+","+PI[i]+",";
+            type[i] = players[i].getType();
+            data = data+name[i]+","+PI[i]+","+type[i]+",";
         }
         data = data+currentTrial+";";
 
