@@ -20,11 +20,17 @@ public class UIController {
         int rev;
         int rej;
 
+        //Trial 2
+        String masterName;
+        int creditNum;
+        int probCredit;
+
         //EditionData
         int año;
         int numJugadores;
         int numPruebas;
         int[] seleccionPruebas;
+
 
         while(true){
             switch (ui.showRoles()) {
@@ -35,15 +41,27 @@ public class UIController {
                             switch (ui.menuTrials()) {
                                 case CREATE_TRIALS:
                                     //ConsoleUIManager pide los datos al usuario
-                                    ui.showTrialsTypes();
-                                    trialName = ui.askString(ConsoleUIManager.askTrialName);
-                                    journalNme = ui.askString(ConsoleUIManager.askTrialJournal);
-                                    quartile = ui.askString(ConsoleUIManager.askTrialQuartile);
-                                    acc = ui.askInt(ConsoleUIManager.askAccessProb, 0 , 100);
-                                    rev = ui.askInt(ConsoleUIManager.askRevProb, 0, 100);
-                                    rej = ui.askInt(ConsoleUIManager.askRejProb, 0 , 100);
-                                    //Le decimos al DAO de business que cree la trial
-                                    bf.createTrial(trialName, journalNme, quartile, acc, rev, rej);
+                                    switch (ui.askTrialsTypes()) {
+                                        case 1:
+                                            trialName = ui.askString(ConsoleUIManager.askTrialName);
+                                            journalNme = ui.askString(ConsoleUIManager.askTrialJournal);
+                                            quartile = ui.askQuartile();
+                                            acc = ui.askInt(ConsoleUIManager.askAccessProb, 0, 100);
+                                            rev = ui.askInt(ConsoleUIManager.askRevProb, 0, 100);
+                                            rej = ui.askInt(ConsoleUIManager.askRejProb, 0, 100);
+                                            //Le decimos al DAO de business que cree la trial
+                                            bf.createTrial(trialName, journalNme, quartile, acc, rev, rej);
+                                        break;
+                                        case 2:
+                                            trialName = ui.askString(ConsoleUIManager.askTrialName);
+                                            masterName = ui.askString(ConsoleUIManager.askMaster);
+                                            creditNum = ui.askInt(ConsoleUIManager.askCredits, 60, 120);
+                                            probCredit = ui.askInt(ConsoleUIManager.askProbCredit, 0 , 100);
+                                            bf.createTrial(trialName, masterName, creditNum, probCredit);
+                                        break;
+                                        case 3:
+
+                                    }
                                     break;
                                 case LIST_TRIALS:
                                     ui.listTrialsText();
@@ -65,6 +83,8 @@ public class UIController {
                                        }
                                     }
                                     break;
+                                default:
+
 
                             }
                             break;

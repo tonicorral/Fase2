@@ -4,7 +4,7 @@ public interface UIManager {
     MenuOptions showRoles();
     MenuOptions opcionesCompositor();
     MenuOptions menuTrials();
-    int showTrialsTypes();
+    int askTrialsTypes();
     int showTrialsName(String[] names);
     void showTrialData(String[] data);
     void listTrialsText();
@@ -28,5 +28,7 @@ public interface UIManager {
     void exitProgram();
     void showEditionResult(String[] results, int year);
     void showTrialERROR();
+    String askQuartile();
+
     }
 

@@ -1,6 +1,8 @@
 package com.company.persistence;
 
 import com.company.business.Trial;
+import com.company.business.TrialManager;
+import com.company.business.TrialMaster;
 import com.company.business.TrialPublicacionArticulo;
 
 import java.io.File;
@@ -34,6 +36,13 @@ public class TrialDAOcsv implements TrialDAO{
             e.printStackTrace();
         }
     }
+    public void save(TrialMaster trial) {
+        try {
+            Files.write(path, Collections.singletonList(trialToCSV(trial)), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     //Devuelve todas las pruebas
     @Override
@@ -42,7 +51,7 @@ public class TrialDAOcsv implements TrialDAO{
         try {
             ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(path));
             for (String fileLine: fileContent) {
-                TrialPublicacionArticulo a = trialFromCSV(fileLine);
+                TrialPublicacionArticulo a = trialFromCSV1(fileLine);
                 trial.add(a);
             }
 
@@ -60,7 +69,7 @@ public class TrialDAOcsv implements TrialDAO{
         try {
             ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(path));
             for (String fileLine: fileContent) {
-                TrialPublicacionArticulo a = trialFromCSV(fileLine);
+                TrialPublicacionArticulo a = trialFromCSV1(fileLine);
                 trial.add(a);
             }
 
@@ -86,7 +95,7 @@ public class TrialDAOcsv implements TrialDAO{
         try {
             ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(path));
             for (String fileLine: fileContent) {
-                TrialPublicacionArticulo a = trialFromCSV(fileLine);
+                TrialPublicacionArticulo a = trialFromCSV1(fileLine);
                 trials.add(a);
             }
 
@@ -110,23 +119,46 @@ public class TrialDAOcsv implements TrialDAO{
     private String trialToCSV(TrialPublicacionArticulo trial) {
         String file;
 
-        file = trial.getNombre()+","+trial.getNombreRevista()+","+trial.getQuartil()+","+
+        file = "1," + trial.getNombre()+","+trial.getNombreRevista()+","+trial.getQuartil()+","+
                 trial.getProbAceptar()+","+trial.getProbRevision()+","+trial.getProbDenegar()+";";
 
         return file;
     }
 
-    private TrialPublicacionArticulo trialFromCSV(String trial) {
+    private String trialToCSV(TrialMaster trial) {
+        String file;
+
+        file = "2,"+ trial.getNombre()+","+trial.getMasterName()+","+trial.getCreditNumber()+","+trial.getProbCredit()+";";
+
+        return file;
+    }
+    private int checkTrial(String trial){
+        String[] a;
+        a = trial.split(",");
+        return Integer.parseInt(a[0]);
+    }
+
+    private TrialPublicacionArticulo trialFromCSV1(String trial) {
         TrialPublicacionArticulo t;
         String[] a;
         String[] b;
         a = trial.split(",");
         b = a[5].split(";");
-        t = new TrialPublicacionArticulo(a[0],a[1], a[2], Integer.parseInt(a[3]), Integer.parseInt(a[4]), Integer.parseInt(b[0]));
+        t = new TrialPublicacionArticulo(a[1],a[2], a[3], Integer.parseInt(a[4]), Integer.parseInt(a[5]), Integer.parseInt(b[0]));
 
         return t;
     }
 
+    private TrialMaster trialFromCSV2(String trial) {
+        TrialMaster t;
+        String[] a;
+        String[] b;
+        a = trial.split(",");
+        b = a[3].split(";");
+        t = new TrialMaster(a[1],a[2],Integer.parseInt(a[3]), Integer.parseInt(b[0]));
+
+        return t;
+    }
 
 
 

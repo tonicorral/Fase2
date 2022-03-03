@@ -17,6 +17,17 @@ public class BusinessFacadeImpl implements BusinessFacade{
     public void createTrial(String trialName, String trialJournal, String quartile, int acc, int rev, int rej) {
         trialManager.crearPruebaPublicacion(trialName, trialJournal, quartile, acc, rev, rej,true);
     }
+    public void createTrial(String trialName, String masterName, int credits, int prob){
+        trialManager.crearTrialMaster(trialName, masterName, credits, prob, true);
+    }
+    public void createTrial(String trialName, String b, int num, boolean check){
+        if(check){
+            //creamos tipo 3
+        }
+        else{
+            //tipo 4
+        }
+    }
 
     @Override
     public String[] trialsNames() {

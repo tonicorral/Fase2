@@ -2,6 +2,8 @@ package com.company.business;
 
 public interface BusinessFacade {
     void createTrial(String trialName, String trialJournal, String quartile, int acc, int rev, int rej);
+    void createTrial(String trialName, String masterName, int credits, int prob);
+    void createTrial(String trialName, String b, int num, boolean check);
     String[] trialsNames();
     String[] trialInfo(int numberTrial);
     boolean trialExit(int numPrueba);
@@ -21,4 +23,5 @@ public interface BusinessFacade {
     Edition loadCurrentEdition();
     boolean checkEditionFinish();
     void clearCurrentEdition();
+
 }

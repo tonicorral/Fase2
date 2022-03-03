@@ -12,6 +12,9 @@ public class ConsoleUIManager implements UIManager {
     public static final String askAccessProb = "Enter the acceptance probability:";
     public static final String askRevProb = "Enter the revision probability:";
     public static final String askRejProb = "Enter the rejection probability:";
+    public static final String askMaster = "Enter the master's name:";
+    public static final String askCredits = "Enter the master's ECTS number:";
+    public static final String askProbCredit = "Enter the credit pass probability:";
 
     //EDITIONS
     public static final String askEditionYear = "Enter the edition’s year:";
@@ -76,39 +79,43 @@ public class ConsoleUIManager implements UIManager {
 
     @Override
     public MenuOptions menuTrials() {
-        System.out.println("\ta) Create Trial");
-        System.out.println("\tb) List Trials");
-        System.out.println("\tc) Delete Trial");
-        System.out.println("\td) Back");
-        try {
-            String data = askString("\nEnter an option!");
-            switch (data) {
-                case "a","A":
-                    return MenuOptions.CREATE_TRIALS;
+        do{
+            System.out.println("\ta) Create Trial");
+            System.out.println("\tb) List Trials");
+            System.out.println("\tc) Delete Trial");
+            System.out.println("\td) Back");
+            try {
+                String data = askString("\nEnter an option!");
+                switch (data) {
+                    case "a", "A":
+                        return MenuOptions.CREATE_TRIALS;
 
-                case "b","B":
-                    return MenuOptions.LIST_TRIALS;
+                    case "b", "B":
+                        return MenuOptions.LIST_TRIALS;
 
-                case "c","C":
-                    return MenuOptions.DELETE_TRIALS;
+                    case "c", "C":
+                        return MenuOptions.DELETE_TRIALS;
 
-                case "d","D":
-                    return MenuOptions.EXIT;
-                default:
-                    throw new NumberFormatException();
+                    case "d", "D":
+                        return MenuOptions.EXIT;
+                    default:
+                        throw new NumberFormatException();
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please select a valid option");
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Please select a value option");
-        }
-        return null;
+        }while(true);
     }
 
     @Override
-    public int showTrialsTypes() {
+    public int askTrialsTypes() {
         System.out.println("--- Trial types ---");
         System.out.println("1) Paper publication");
+        System.out.println("2) Master studies");
+        System.out.println("3) Doctoral thesis defense");
+        System.out.println("4) Budget request\n");
 
-        return askInt("Enter the trial’s type:");
+        return askInt("Enter the trial’s type:", 1, 4);
     }
 
     @Override
@@ -436,6 +443,20 @@ public class ConsoleUIManager implements UIManager {
     @Override
     public void showTrialERROR() {
         System.out.println("There must be at least 3 trials to create a edition!");
+    }
+
+    @Override
+    public String askQuartile() {
+        String quartile;
+        System.out.println(ConsoleUIManager.askTrialQuartile);
+
+        do{
+            quartile = scanner.nextLine();
+            if(quartile.charAt(0) == 'd' && quartile.length() == 2 && quartile.charAt(1) > '0' && quartile.charAt(1) < '5' ) {
+                return quartile;
+            }
+            System.out.println("Quartile must be 'd + [1,4]'. Please enter it again");
+        }while(true);
     }
 
 }

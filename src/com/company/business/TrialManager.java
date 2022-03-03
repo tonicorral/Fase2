@@ -25,6 +25,14 @@ public class TrialManager {
         return prueba;
     }
 
+    public TrialMaster crearTrialMaster(String nombrePrueba, String masterName, int credits, int prob, boolean save){
+        TrialMaster prueba = new TrialMaster(nombrePrueba,  masterName,  credits,  prob);
+        if(save) {
+           // trialDAO.save(prueba);
+        }
+        return prueba;
+    }
+
     public String[] listaPruebas() {
         Trial[] trials = trialDAO.getAll();
         ArrayList <String> names = new ArrayList<>();
