@@ -131,9 +131,19 @@ public class ConsoleUIManager implements UIManager {
 
     @Override
     public void showTrialData(String[] data) {
-        System.out.println("\nTrial: "+ data[0]+ " (Paper Publication)");
-        System.out.println("Journal: "+ data[1]+ " ("+ data[2]+ ")");
-        System.out.println("Chances: "+ data[3]+ "% acceptance, "+ data[4] +"% revision, " + data[5]+ "% rejection");
+
+        switch (data[0]) {
+            case "1":
+                System.out.println("\nTrial: "+ data[1]+ " (Paper Publication)");
+                System.out.println("Journal: "+ data[2]+ " ("+ data[3]+ ")");
+                System.out.println("Chances: "+ data[4]+ "% acceptance, "+ data[5] +"% revision, " + data[6]+ "% rejection");
+                break;
+            case "2":
+                System.out.println("\nTrial: "+ data[1]+ " (Master studies)");
+                System.out.println("Master: "+ data[2]);
+                System.out.println("ECTS: "+data[3]+", with a "+data[4]+" chance to pass each one.");
+                break;
+        }
     }
 
     @Override

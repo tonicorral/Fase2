@@ -1,10 +1,13 @@
 package com.company.business;
 
+import java.util.ArrayList;
+
 public class Edition {
     private int year;
     private int numPlayers;
     private int numTrials;
-    private TrialPublicacionArticulo[] trials;
+    private Trial[] trials;
+    private ArrayList<Trial> trials2;
     private int[] num;
     private Player[] players;
     private  int currentTrial;
@@ -25,14 +28,23 @@ public class Edition {
         this.currentTrial = currentTrial;
     }
 
+    public void setTrials2(ArrayList<Trial> trials2) {
+        this.trials2 = trials2;
+    }
+
     public Edition(int year, int numPlayers, int numTrials, int[] num) {
         this.year = year;
         this.numPlayers = numPlayers;
         this.numTrials = numTrials;
         this.num = num;
+        this.trials2 = new ArrayList<>();
     }
 
-    public void setTrials(TrialPublicacionArticulo[] trials) {
+    public ArrayList<Trial> getTrials2() {
+        return trials2;
+    }
+
+    public void setTrials(Trial[] trials) {
         this.trials = trials;
     }
 
@@ -52,7 +64,7 @@ public class Edition {
         return numTrials;
     }
 
-    public TrialPublicacionArticulo[] getTrials() {
+    public Trial[] getTrials() {
         return trials;
     }
 }

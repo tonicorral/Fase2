@@ -64,14 +64,27 @@ public class BusinessFacadeImpl implements BusinessFacade{
     @Override
     public Edition addEditionTrial(int numEdition) {
         Edition edition = editionManager.getEdition(numEdition);
-        TrialPublicacionArticulo[] trials = new TrialPublicacionArticulo[edition.getNumTrials()];
+        Trial[] trials = new Trial[edition.getNumTrials()];
+        ArrayList<Trial> trials2 = new ArrayList<>();
 
         for (int i = 0; i < edition.getNumTrials(); i++) {
             String[] prueba = trialManager.infoPrueba(edition.getNum()[i]);         //pillamos todos los datos de la prueba
-            trials[i] = trialManager.crearPruebaPublicacion(prueba[0], prueba[1], prueba[2], Integer.parseInt(prueba[3]),
-                    Integer.parseInt(prueba[4]), Integer.parseInt(prueba[5]), false);
+            switch (prueba[0]) {
+                case "1":
+                    trials[i] = trialManager.crearPruebaPublicacion(prueba[1], prueba[2], prueba[3], Integer.parseInt(prueba[4]),
+                            Integer.parseInt(prueba[5]), Integer.parseInt(prueba[6]), false);
+                    trials2.add(trialManager.crearPruebaPublicacion(prueba[1], prueba[2], prueba[3], Integer.parseInt(prueba[4]),
+                            Integer.parseInt(prueba[5]), Integer.parseInt(prueba[6]), false));
+                    break;
+                case "2":
+                    trials[i] = trialManager.crearTrialMaster(prueba[1], prueba[2], Integer.parseInt(prueba[3]),  Integer.parseInt(prueba[4]), false);
+                    trials2.add(trialManager.crearTrialMaster(prueba[1], prueba[2], Integer.parseInt(prueba[3]),  Integer.parseInt(prueba[4]), false));
+                    break;
+            }
+
         }
         edition.setTrials(trials);
+        edition.setTrials2(trials2);
         return edition;
     }
 
@@ -80,12 +93,12 @@ public class BusinessFacadeImpl implements BusinessFacade{
         ArrayList<String> info = new ArrayList<>();
         Edition edition = addEditionTrial(numEdition);      //crearla y meterle todas las pruebas
 
-        TrialPublicacionArticulo[] trials = edition.getTrials();
+        Trial[] trials = edition.getTrials();
         info.add(String.valueOf(edition.getYear()));
         info.add(String.valueOf(edition.getNumPlayers()));
         info.add(String.valueOf(edition.getNumTrials()));
 
-        for (TrialPublicacionArticulo trial: trials) {
+        for (Trial trial: trials) {
             info.add(trial.getNombre());
         }
 
@@ -133,7 +146,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
     @Override
     public String[] executeEdition() {
 
-        Edition edition = addEditionTrial(loadCurrentEdition());
+        /*Edition edition = addEditionTrial(loadCurrentEdition());
         Player[] players0 = edition.getPlayers();
         int[] type = new int[edition.getNumPlayers()];
         for (int i = 0; i < edition.getNumPlayers(); i++) {
@@ -177,12 +190,15 @@ public class BusinessFacadeImpl implements BusinessFacade{
         }
 
         return results;
+
+         */
+        return null;
     }
 
 
     @Override
     public String[] startEdition(String[] players) {
-        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(),savePlayers(players),0);
+        /*editionManager.saveCurrentEdition(editionManager.getCurrentEdition(),savePlayers(players),0);
         Edition edition = addEditionTrial(editionManager.loadCurrentEdition());
         Player[] players0 = edition.getPlayers();
         Player[] players1 = executeTrial(edition.getTrials()[0], savePlayers(players));
@@ -195,7 +211,6 @@ public class BusinessFacadeImpl implements BusinessFacade{
 
             if(players1[i].getType() > players0[i].getType()) {
                 types[i] = players1[i].getType();
-                System.out.println("esta dentro");
             }
             else {
                 types[i] = 0;
@@ -223,6 +238,9 @@ public class BusinessFacadeImpl implements BusinessFacade{
         }
 
         return results;
+
+         */
+        return null;
     }
 
     private Player[] executeTrial (TrialPublicacionArticulo trial, Player[] player){
@@ -334,12 +352,19 @@ public class BusinessFacadeImpl implements BusinessFacade{
         return player;
     }
     private Edition addEditionTrial(Edition edition) {
-        TrialPublicacionArticulo[] trials = new TrialPublicacionArticulo[edition.getNumTrials()];
+        Trial[] trials = new Trial[edition.getNumTrials()];
 
         for (int i = 0; i < edition.getNumTrials(); i++) {
             String[] prueba = trialManager.infoPrueba(edition.getNum()[i]);         //pillamos todos los datos de la prueba
-            trials[i] = trialManager.crearPruebaPublicacion(prueba[0], prueba[1], prueba[2], Integer.parseInt(prueba[3]),
-                    Integer.parseInt(prueba[4]), Integer.parseInt(prueba[5]), false);
+            switch (prueba[0]) {
+                case "1":
+                    trials[i] = trialManager.crearPruebaPublicacion(prueba[1], prueba[2], prueba[3], Integer.parseInt(prueba[4]),
+                            Integer.parseInt(prueba[5]), Integer.parseInt(prueba[6]), false);
+                    break;
+                case "2":
+                    trials[i] = trialManager.crearTrialMaster(prueba[1], prueba[2], Integer.parseInt(prueba[3]),  Integer.parseInt(prueba[4]), false);
+                    break;
+            }
         }
         edition.setTrials(trials);
         return edition;

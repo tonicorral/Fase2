@@ -47,12 +47,20 @@ public class TrialDAOcsv implements TrialDAO{
     //Devuelve todas las pruebas
     @Override
     public Trial[] getAll() {
-        ArrayList<TrialPublicacionArticulo> trial = new ArrayList<>();
+        ArrayList<Trial> trial = new ArrayList<>();
         try {
             ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(path));
             for (String fileLine: fileContent) {
-                TrialPublicacionArticulo a = trialFromCSV1(fileLine);
-                trial.add(a);
+                switch (checkTrial(fileLine)) {
+                    case 1:
+                        TrialPublicacionArticulo a = trialFromCSV1(fileLine);
+                        trial.add(a);
+                        break;
+                    case 2:
+                        TrialMaster b = trialFromCSV2(fileLine);
+                        trial.add(b);
+                        break;
+                }
             }
 
         } catch (IOException e) {
@@ -64,19 +72,25 @@ public class TrialDAOcsv implements TrialDAO{
 
     //Devuelve la prueba que corresponde el num que le entra
     @Override
-    public TrialPublicacionArticulo get(int numberTrial) {
-        ArrayList<TrialPublicacionArticulo> trial = new ArrayList<>();
+    public TrialPublicacionArticulo getPublicacion(int numberTrial) {
         try {
             ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(path));
-            for (String fileLine: fileContent) {
-                TrialPublicacionArticulo a = trialFromCSV1(fileLine);
-                trial.add(a);
-            }
-
+            return trialFromCSV1(fileContent.get(numberTrial-1));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return trial.get(numberTrial-1);
+        return null;
+    }
+
+    @Override
+    public TrialMaster getMaster(int numberTrial) {
+        try {
+            ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(path));
+            return trialFromCSV2(fileContent.get(numberTrial-1));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -115,6 +129,17 @@ public class TrialDAOcsv implements TrialDAO{
 
     }
 
+    @Override
+    public int getType(int numPrueba) {
+        try {
+            ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(path));
+            return checkTrial(fileContent.get(numPrueba-1));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     //info a texto
     private String trialToCSV(TrialPublicacionArticulo trial) {
         String file;
@@ -134,6 +159,7 @@ public class TrialDAOcsv implements TrialDAO{
     }
     private int checkTrial(String trial){
         String[] a;
+
         a = trial.split(",");
         return Integer.parseInt(a[0]);
     }
@@ -143,7 +169,7 @@ public class TrialDAOcsv implements TrialDAO{
         String[] a;
         String[] b;
         a = trial.split(",");
-        b = a[5].split(";");
+        b = a[6].split(";");
         t = new TrialPublicacionArticulo(a[1],a[2], a[3], Integer.parseInt(a[4]), Integer.parseInt(a[5]), Integer.parseInt(b[0]));
 
         return t;
@@ -154,7 +180,7 @@ public class TrialDAOcsv implements TrialDAO{
         String[] a;
         String[] b;
         a = trial.split(",");
-        b = a[3].split(";");
+        b = a[4].split(";");
         t = new TrialMaster(a[1],a[2],Integer.parseInt(a[3]), Integer.parseInt(b[0]));
 
         return t;

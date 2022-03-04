@@ -28,7 +28,7 @@ public class TrialManager {
     public TrialMaster crearTrialMaster(String nombrePrueba, String masterName, int credits, int prob, boolean save){
         TrialMaster prueba = new TrialMaster(nombrePrueba,  masterName,  credits,  prob);
         if(save) {
-           // trialDAO.save(prueba);
+            trialDAO.save(prueba);
         }
         return prueba;
     }
@@ -44,16 +44,31 @@ public class TrialManager {
     }
 
     public  String[] infoPrueba(int numberPrueba) {
-        TrialPublicacionArticulo trial = trialDAO.get(numberPrueba);
-        ArrayList<String> data = new ArrayList<>();
-        data.add(trial.getNombre());
-        data.add(trial.getNombreRevista());
-        data.add(trial.getQuartil());
-        data.add(String.valueOf(trial.getProbAceptar()));
-        data.add(String.valueOf(trial.getProbRevision()));
-        data.add(String.valueOf(trial.getProbDenegar()));
 
-        return data.toArray(new String[data.size()]);
+        switch (trialDAO.getType(numberPrueba)) {
+            case 1:
+                TrialPublicacionArticulo trial = trialDAO.getPublicacion(numberPrueba);
+                ArrayList<String> data = new ArrayList<>();
+                data.add("1");
+                data.add(trial.getNombre());
+                data.add(trial.getNombreRevista());
+                data.add(trial.getQuartil());
+                data.add(String.valueOf(trial.getProbAceptar()));
+                data.add(String.valueOf(trial.getProbRevision()));
+                data.add(String.valueOf(trial.getProbDenegar()));
+                return data.toArray(new String[data.size()]);
+            case 2:
+                TrialMaster trial2 = trialDAO.getMaster(numberPrueba);
+                ArrayList<String> data2 = new ArrayList<>();
+                data2.add("2");
+                data2.add(trial2.getNombre());
+                data2.add(trial2.getMasterName());
+                data2.add(String.valueOf(trial2.getCreditNumber()));
+                data2.add(String.valueOf(trial2.getProbCredit()));
+                return data2.toArray(new String[data2.size()]);
+
+            default: return null;
+        }
     }
 
     public boolean trialExit(int numPrueba) {
