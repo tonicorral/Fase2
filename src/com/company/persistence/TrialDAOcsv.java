@@ -105,18 +105,30 @@ public class TrialDAOcsv implements TrialDAO{
 
     @Override
     public void delete(int numPrueba) {
-        ArrayList<TrialPublicacionArticulo> trials = new ArrayList<>();
+        ArrayList trial = new ArrayList();
         try {
             ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(path));
             for (String fileLine: fileContent) {
-                TrialPublicacionArticulo a = trialFromCSV1(fileLine);
-                trials.add(a);
+                switch (checkTrial(fileLine)) {
+                    case 1:
+                        TrialPublicacionArticulo a = trialFromCSV1(fileLine);
+                        trial.add(a);
+                        break;
+                    case 2:
+                        TrialMaster b = trialFromCSV2(fileLine);
+                        trial.add(b);
+                        break;
+                }
             }
-
             ArrayList<String> trialList = new ArrayList<>();     //arraylist de pruebas
-            for (int i = 0; i < trials.size(); i++) {
-                if(i != numPrueba - 1){
-                    trialList.add(trialToCSV(trials.get(i)));       //guardamos todas las pruebas menos la que borramos
+            for (int i = 0; i < trial.size(); i++) {
+                if (i != numPrueba - 1) {
+                    if(trial.get(i) instanceof TrialPublicacionArticulo) {
+                        trialList.add(trialToCSV((TrialPublicacionArticulo) trial.get(i)));
+                    }
+                    else if(trial.get(i) instanceof TrialMaster) {
+                        trialList.add(trialToCSV((TrialMaster) trial.get(i)));
+                    }
                 }
             }
 
@@ -125,7 +137,6 @@ public class TrialDAOcsv implements TrialDAO{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 

@@ -239,8 +239,12 @@ public class ConsoleUIManager implements UIManager {
         System.out.println("Year: "+info[0]);
         System.out.println("Players: "+info[1]);
         System.out.println("Trials:");
+        int j = 3;
         for (int i = 0; i < Integer.parseInt(info[2]); i++) {
-            System.out.println("\t"+(i+1)+"- "+info[3+i]+" (Paper publication)");
+            System.out.print("\t"+(i+1)+"- "+info[j]);
+            j++;
+            System.out.println(" ("+info[j]+")");
+            j++;
         }
     }
 
@@ -275,7 +279,6 @@ public class ConsoleUIManager implements UIManager {
         do {
             String info = scanner.nextLine();
 
-            //comprovar que no esta vacia
             if(!info.equals("")) {
                 return info;
             }
@@ -365,11 +368,13 @@ public class ConsoleUIManager implements UIManager {
     @Override
     public void showResults(String[] results) {
         System.out.println("\nTrial #"+results[1]+" - "+results[0]+"\n");
-        int numPlayers = Integer.parseInt(results[2]);
+        int numPlayers = Integer.parseInt(results[3]);
         int[] types = new int[numPlayers];
         int k = 0;
+        int trialType = Integer.parseInt(results[1]);
         String[] names = new String[numPlayers];
-        for (int i = 3; i < results.length; i++) {
+
+        for (int i = 4; i < results.length; i++) {
             if(results[i].charAt(results[i].length()-1) == '*') {
                 String name = results[i].substring(0,results[i].length()-1);
                 System.out.println(name+" is disqualified");
@@ -380,23 +385,40 @@ public class ConsoleUIManager implements UIManager {
                 i++;
             }
             else {
-                System.out.print(results[i]+" is submitting...");
-                names[k] = results[i];
-                i++;
-
-                int counter = Integer.parseInt(results[i]);
-                for (int j = 0; j < counter; j++) {
-                    System.out.print(" Revisions...");
+                switch (trialType) {
+                    case 1:
+                        System.out.print(results[i]+" is submitting...");
+                        names[k] = results[i];
+                        i++;
+                        int counter = Integer.parseInt(results[i]);
+                        for (int j = 0; j < counter; j++) {
+                            System.out.print(" Revisions...");
+                        }
+                        i++;
+                        if(results[i] == "true") {
+                            System.out.print(" Accepted!");
+                        }
+                        else {
+                            System.out.print(" Rejected.");
+                        }
+                        i++;
+                        break;
+                    case 2:
+                        System.out.print(results[i]+" passed ");
+                        names[k] = results[i];
+                        i++;
+                        System.out.print(results[i]+"/");
+                        i++;
+                        System.out.print(Math.abs(Integer.valueOf(results[i]))+" ECTS. ");
+                        if(Integer.valueOf(results[i]) > 0) {
+                            System.out.print("Congrats!");
+                        }
+                        else {
+                            System.out.print("Sorry...");
+                        }
+                        i++;
+                        break;
                 }
-                i++;
-
-                if(results[i] == "true") {
-                    System.out.print(" Accepted!");
-                }
-                else {
-                    System.out.print(" Rejected.");
-                }
-                i++;
 
                 int pi = Integer.parseInt(results[i]);
                 if (pi > 0) {
@@ -430,7 +452,7 @@ public class ConsoleUIManager implements UIManager {
     public void showEditionResult(String[] results, int year) {
         boolean r = false;
 
-        for (int i = 3; i < results.length; i++) {
+        for (int i = 4; i < results.length; i++) {
             i++;
             i++;
             i++;

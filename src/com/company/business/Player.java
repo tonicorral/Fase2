@@ -6,6 +6,7 @@ public class Player {
     private int counter;
     private boolean win;
     private int type;
+    private int ECTS;
 
     public int getCounter() {
         return counter;
@@ -23,11 +24,19 @@ public class Player {
         this.win = win;
     }
 
+    public void setECTS(int ECTS) {
+        this.ECTS = ECTS;
+    }
+
+    public int getECTS() {
+        return ECTS;
+    }
+
     public Player(String name) {
         this.name = name;
         this.PI = 5;
         this.type = 0;
-
+        this.ECTS = 0;
     }
 
     public void setPI(int PI) {
@@ -46,6 +55,7 @@ public class Player {
         this.name = name;
         this.PI = PI;
         this.type = type;
+        this.ECTS = 0;
     }
 
     public void addPI(int PI) {

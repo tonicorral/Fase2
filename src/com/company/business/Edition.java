@@ -6,8 +6,7 @@ public class Edition {
     private int year;
     private int numPlayers;
     private int numTrials;
-    private Trial[] trials;
-    private ArrayList<Trial> trials2;
+    private ArrayList trials;
     private int[] num;
     private Player[] players;
     private  int currentTrial;
@@ -28,8 +27,8 @@ public class Edition {
         this.currentTrial = currentTrial;
     }
 
-    public void setTrials2(ArrayList<Trial> trials2) {
-        this.trials2 = trials2;
+    public void setTrials(ArrayList trials) {
+        this.trials = trials;
     }
 
     public Edition(int year, int numPlayers, int numTrials, int[] num) {
@@ -37,15 +36,10 @@ public class Edition {
         this.numPlayers = numPlayers;
         this.numTrials = numTrials;
         this.num = num;
-        this.trials2 = new ArrayList<>();
+        this.trials = new ArrayList();
     }
-
-    public ArrayList<Trial> getTrials2() {
-        return trials2;
-    }
-
-    public void setTrials(Trial[] trials) {
-        this.trials = trials;
+    public ArrayList getTrials() {
+        return trials;
     }
 
     public int[] getNum() {
@@ -64,7 +58,5 @@ public class Edition {
         return numTrials;
     }
 
-    public Trial[] getTrials() {
-        return trials;
-    }
+
 }
