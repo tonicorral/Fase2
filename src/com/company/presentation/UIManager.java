@@ -19,7 +19,6 @@ public interface UIManager {
     boolean askDeleteYear(int editionYear);
     String askString(String text);
     int askInt(String text);
-    int askInt();
     int askInt(String text, int min, int max);
     void noCurrentEdition(int year);
     String[] askPlayers(int year, int numPlayers);
@@ -29,6 +28,6 @@ public interface UIManager {
     void showEditionResult(String[] results, int year);
     void showTrialERROR();
     String askQuartile();
-
+    boolean askPersistence();
     }
 

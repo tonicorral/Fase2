@@ -39,12 +39,13 @@ public class UIController {
         int numPruebas;
         int[] seleccionPruebas;
 
+        boolean persistenceType;
 
-        while(true){
+        while(true) {
+            persistenceType = ui.askPersistence();
             switch (ui.showRoles()) {
                 case SELECT_COMPOSITOR:
                     switch (ui.opcionesCompositor()) {
-
                         case MANAGE_TRIALS:
                             switch (ui.menuTrials()) {
                                 case CREATE_TRIALS:

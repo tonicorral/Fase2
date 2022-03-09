@@ -229,7 +229,7 @@ public class ConsoleUIManager implements UIManager {
 
         int[] nums = new int[numPruebas];
         for (int j = 0; j < numPruebas; j++) {
-            nums[j] = askInt("Pick a trial ("+(j+1)+"/"+numPruebas+"):", 1, numPruebas);
+            nums[j] = askInt("Pick a trial ("+(j+1)+"/"+numPruebas+"):", 1, nameTrial.length);
         }
 
         System.out.println("\nThe edition was created successfully!");
@@ -316,19 +316,6 @@ public class ConsoleUIManager implements UIManager {
     }
 
     @Override
-    public int askInt() {
-        do {
-            String info = scanner.nextLine();
-            try {
-                return Integer.parseInt(info);
-            }
-            catch(NumberFormatException e) {
-                System.out.println("Must write a number!");
-            }
-        }while(true);
-    }
-
-    @Override
     public int askInt(String text, int min, int max) {
         System.out.println(text);
         do {
@@ -381,14 +368,23 @@ public class ConsoleUIManager implements UIManager {
 
     @Override
     public void showResults(String[] results) {
-        System.out.println("\nTrial #"+results[2]+" - "+results[0]+"\n");
         int numPlayers = Integer.parseInt(results[3]);
         int[] types = new int[numPlayers];
-        int k = 0;
+        int k = 0, i= 4;
         int trialType = Integer.parseInt(results[1]);
         String[] names = new String[numPlayers];
 
-        for (int i = 4; i < results.length; i++) {
+        System.out.println("\nTrial #"+results[2]+" - "+results[0]+"\n");
+        if(trialType == 4) {
+           if(results[4] == "1") {
+               System.out.println("The research group got the budget!");
+           }
+           else {
+               System.out.println("The research group did not get the budget...");
+           }
+           i++;
+        }
+        for (; i < results.length; i++) {
             if(results[i].charAt(results[i].length()-1) == '*') {
                 String name = results[i].substring(0,results[i].length()-1);
                 System.out.println(name+" is disqualified");
@@ -433,10 +429,22 @@ public class ConsoleUIManager implements UIManager {
                         i++;
                         break;
                     case 3:
-
+                        names[k] = results[i];
+                        i++;
+                        if(results[i].equals("true")) {
+                            System.out.print(names[k]+" was successful. Congrats!");
+                        }
+                        else {
+                            System.out.println(names[k]+" was not successful. Sorry...");
+                        }
+                        i++;
+                        break;
+                    case 4:
+                        names[k] = results[i];
+                        System.out.print(names[k]+".");
+                        i++;
                         break;
                 }
-
                 int pi = Integer.parseInt(results[i]);
                 if (pi > 0) {
                     System.out.println(" PI count: "+pi);
@@ -449,7 +457,7 @@ public class ConsoleUIManager implements UIManager {
             }
             k++;
         }
-        for (int i = 0; i < numPlayers; i++) {
+        for (i = 0; i < numPlayers; i++) {
             if(types[i] == 1) {
                 System.out.println(names[i]+" is now a master (with 5 PI).");
             }
@@ -469,16 +477,42 @@ public class ConsoleUIManager implements UIManager {
     public void showEditionResult(String[] results, int year) {
         boolean r = false;
 
-        for (int i = 4; i < results.length; i++) {
-            i++;
-            i++;
-            i++;
-            int pi = Integer.parseInt(results[i]);
-            if(pi > 0) {
-                r = true;
-            }
-            i++;
+        switch (Integer.parseInt(results[1])) {
+            case 1,2:
+                for (int i = 4; i < results.length; i++) {
+                    i++;
+                    i++;
+                    i++;
+                    int pi = Integer.parseInt(results[i]);
+                    if(pi > 0) {
+                        r = true;
+                    }
+                    i++;
+                }
+                break;
+            case 3:
+                for (int i = 4; i < results.length; i++) {
+                    i++;
+                    i++;
+                    int pi = Integer.parseInt(results[i]);
+                    if(pi > 0) {
+                        r = true;
+                    }
+                    i++;
+                }
+                break;
+            case 4:
+                for (int i = 5; i < results.length; i++) {
+                    i++;
+                    int pi = Integer.parseInt(results[i]);
+                    if(pi > 0) {
+                        r = true;
+                    }
+                    i++;
+                }
+                break;
         }
+
         System.out.print("\nTHE TRIALS "+year+" HAVE ENDED - ");
         if(r) {
             System.out.println("PLAYERS WON\n");
@@ -506,6 +540,29 @@ public class ConsoleUIManager implements UIManager {
             }
             System.out.println("Quartile must be 'd + [1,4]'. Please enter it again");
         }while(true);
+    }
+
+    @Override
+    public boolean askPersistence() {
+        String faction;
+        System.out.println("The IEEE needs to know where your allegiance lies.\n\n" +
+                "\tI) People’s Front of Engineering (CSV)\n" +
+                "\tII) Engineering People’s Front (JSON)\n");
+        do {
+            faction = askString("Pick a faction: ");
+            if(faction.equalsIgnoreCase("I")) {
+                System.out.println("Loading data from CSV files...");
+                return false;
+            }
+            else if(faction.equalsIgnoreCase("II")) {
+                System.out.println("Loading data from JSON files...");
+                return true;
+            }
+            else {
+                System.out.println("Please enter a valid option!\n");
+            }
+        }while (true);
+
     }
 
 }

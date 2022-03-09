@@ -168,12 +168,13 @@ public class BusinessFacadeImpl implements BusinessFacade{
         Edition edition = addEditionTrial(loadCurrentEdition());
         Player[] players0 = edition.getPlayers();
         Player[] players1;
-        int[] type = new int[edition.getNumPlayers()];
         String trial;
+        int[] types = new int[edition.getNumPlayers()];
 
         for (int i = 0; i < edition.getNumPlayers(); i++) {
-            type[i] = players0[i].getType();
+            types[i] = players0[i].getType();
         }
+
         if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialPublicacionArticulo) {
             players1 = executeTrial((TrialPublicacionArticulo) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
             trial = "1";
@@ -191,111 +192,9 @@ public class BusinessFacadeImpl implements BusinessFacade{
             trial = "4";
         }
 
-
         editionManager.saveCurrentEdition(editionManager.getCurrentEdition(), players1, edition.getCurrentTrial()+1);
 
-        int[] types = new int[edition.getNumPlayers()];
-        for (int i = 0; i < edition.getNumPlayers(); i++) {
-            if(players1[i].getType() > type[i]) {
-                types[i] = players1[i].getType();
-            }
-            else {
-                types[i] = 0;
-            }
-        }
-
-        String[] results = new String[4+edition.getNumPlayers()*5];
-        results[0] = ((Trial) edition.getTrials().get(edition.getCurrentTrial())).getNombre();
-        results[1] = trial;
-        results[2] = String.valueOf(edition.getCurrentTrial()+1);
-        results[3] = String.valueOf(edition.getNumPlayers());
-
-        int j = 4;
-        if (edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialPublicacionArticulo) {
-            for (int i = 0; i < edition.getNumPlayers(); i++) {
-                if(players1[i].getCounter() == -1) {
-                    results[j] = players1[i].getName()+"*";
-                }
-                else {
-                    results[j] = players1[i].getName();
-                }
-                j++;
-                results[j] = String.valueOf(players1[i].getCounter());
-                j++;
-                results[j] = String.valueOf(players1[i].getWin());
-                j++;
-                results[j] = String.valueOf(players1[i].getPI());
-                j++;
-                results[j] = String.valueOf(types[i]);
-                j++;
-            }
-        }
-        else if (edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialMaster) {
-            for (int i = 0; i < edition.getNumPlayers(); i++) {
-                if(players1[i].getCounter() == -1) {
-                    results[j] = players1[i].getName()+"*";
-                }
-                else {
-                    results[j] = players1[i].getName();
-                }
-                j++;
-                results[j] = String.valueOf(players1[i].getECTS());
-                j++;
-                Integer r;
-                if(players1[i].getECTS() >= ((TrialMaster) edition.getTrials().get(edition.getCurrentTrial())).getCreditNumber()-players1[i].getECTS()) {
-                    r = ((TrialMaster) edition.getTrials().get(edition.getCurrentTrial())).getCreditNumber();
-                }
-                else {
-                    r = (((TrialMaster) edition.getTrials().get(edition.getCurrentTrial())).getCreditNumber() * -1);
-                }
-                results[j] = r.toString();
-                j++;
-                results[j] = String.valueOf(players1[i].getPI());
-                j++;
-                results[j] = String.valueOf(types[i]);
-                j++;
-            }
-        }
-        else if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialTesis){
-            for (int i = 0; i < edition.getNumPlayers(); i++) {
-                if (players1[i].getCounter() == -1) {
-                    results[j] = players1[i].getName() + "*";
-                } else {
-                    results[j] = players1[i].getName();
-                }
-                j++;
-                results[j] = String.valueOf(players1[i].getWin());
-                j++;
-                results[j] = String.valueOf(players1[i].getPI());
-                j++;
-                results[j] = String.valueOf(types[i]);
-                j++;
-            }
-        }
-        else{
-            if(players1[0].getWin()){
-                results[j] = "1";
-            }
-            else{
-                results[j] = "0";
-            }
-            j++;
-            for (int i = 0; i < edition.getNumPlayers(); i++) {
-                if (players1[i].getCounter() == -1) {
-                    results[j] = players1[i].getName() + "*";
-                } else {
-                    results[j] = players1[i].getName();
-                }
-                j++;
-                results[j] = String.valueOf(players1[i].getPI());
-                j++;
-                results[j] = String.valueOf(types[i]);
-                j++;
-            }
-        }
-
-        return results;
-
+        return doEdition(edition, players1, trial, types);
     }
 
 
@@ -306,6 +205,11 @@ public class BusinessFacadeImpl implements BusinessFacade{
         Player[] players0 = edition.getPlayers();
         Player[] players1;
         String trial;
+        int[] types = new int[edition.getNumPlayers()];
+
+        for (int i = 0; i < edition.getNumPlayers(); i++) {
+            types[i] = players0[i].getType();
+        }
 
         if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialPublicacionArticulo) {
             players1 = executeTrial((TrialPublicacionArticulo) edition.getTrials().get(0), savePlayers(players));
@@ -326,23 +230,35 @@ public class BusinessFacadeImpl implements BusinessFacade{
 
         editionManager.saveCurrentEdition(editionManager.getCurrentEdition(), players1, 1);
 
-        int[] types = new int[edition.getNumPlayers()];
-        for (int i = 0; i < edition.getNumPlayers(); i++) {
-            System.out.println(players1[i].getType());
-            System.out.println(players0[i].getType());
+        return doEdition(edition, players1, trial, types);
 
-            if(players1[i].getType() > players0[i].getType()) {
+    }
+
+    private String[] doEdition(Edition edition, Player[] players1, String trial, int[] types) {
+        String[] results;
+
+        for (int i = 0; i < edition.getNumPlayers(); i++) {
+            if(players1[i].getType() > types[i]) {
                 types[i] = players1[i].getType();
             }
             else {
                 types[i] = 0;
             }
         }
+        if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialPublicacionArticulo ||
+                edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialMaster) {
+             results = new String[4+edition.getNumPlayers()*5];
+        }
+        else if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialTesis) {
+             results = new String[4+edition.getNumPlayers()*4];
+        }
+        else {
+            results = new String[5+edition.getNumPlayers()*3];
+        }
 
-        String[] results = new String[4+edition.getNumPlayers()*5];
-        results[0] = ((Trial) edition.getTrials().get(0)).getNombre();
+        results[0] = ((Trial) edition.getTrials().get(edition.getCurrentTrial())).getNombre();
         results[1] = trial;
-        results[2] = "1";
+        results[2] = String.valueOf(edition.getCurrentTrial()+1);
         results[3] = String.valueOf(edition.getNumPlayers());
 
         int j = 4;
@@ -389,46 +305,44 @@ public class BusinessFacadeImpl implements BusinessFacade{
                 j++;
             }
         }
-            else if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialTesis){
-                for (int i = 0; i < edition.getNumPlayers(); i++) {
-                    if (players1[i].getCounter() == -1) {
-                        results[j] = players1[i].getName() + "*";
-                    } else {
-                        results[j] = players1[i].getName();
-                    }
-                    j++;
-                    results[j] = String.valueOf(players1[i].getWin());
-                    j++;
-                    results[j] = String.valueOf(players1[i].getPI());
-                    j++;
-                    results[j] = String.valueOf(types[i]);
-                    j++;
-                }
-            }
-            else {
-                if (players1[0].getWin()) {
-                    results[j] = "1";
+        else if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialTesis){
+            for (int i = 0; i < edition.getNumPlayers(); i++) {
+                if (players1[i].getCounter() == -1) {
+                    results[j] = players1[i].getName() + "*";
                 } else {
-                    results[j] = "0";
+                    results[j] = players1[i].getName();
                 }
                 j++;
-                for (int i = 0; i < edition.getNumPlayers(); i++) {
-                    if (players1[i].getCounter() == -1) {
-                        results[j] = players1[i].getName() + "*";
-                    } else {
-                        results[j] = players1[i].getName();
-                    }
-                    j++;
-                    results[j] = String.valueOf(players1[i].getPI());
-                    j++;
-                    results[j] = String.valueOf(types[i]);
-                    j++;
-                }
+                results[j] = String.valueOf(players1[i].getWin());
+                j++;
+                results[j] = String.valueOf(players1[i].getPI());
+                j++;
+                results[j] = String.valueOf(types[i]);
+                j++;
             }
-
+        }
+        else {
+            if (players1[0].getWin()) {
+                results[j] = "1";
+            } else {
+                results[j] = "0";
+            }
+            j++;
+            for (int i = 0; i < edition.getNumPlayers(); i++) {
+                if (players1[i].getCounter() == -1) {
+                    results[j] = players1[i].getName() + "*";
+                } else {
+                    results[j] = players1[i].getName();
+                }
+                j++;
+                results[j] = String.valueOf(players1[i].getPI());
+                j++;
+                results[j] = String.valueOf(types[i]);
+                j++;
+            }
+        }
 
         return results;
-
     }
 
     private Player[] executeTrial (TrialPublicacionArticulo trial, Player[] player){
@@ -640,6 +554,12 @@ public class BusinessFacadeImpl implements BusinessFacade{
                 else{
                     player[i].addPI((int) Math.ceil(player[i].getPI()/2));
                 }
+                if(player[i].getType() != 2) {
+                    if (player[i].getPI() >= 10) {
+                        player[i].setType(player[i].getType() + 1);
+                        player[i].setPI(5);
+                    }
+                }
             }
         }
         else{
@@ -651,6 +571,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
                 }
             }
         }
+
         return player;
     }
 

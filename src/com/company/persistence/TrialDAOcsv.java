@@ -144,7 +144,6 @@ public class TrialDAOcsv implements TrialDAO{
         if(trials.length + 1 == numPrueba) {
             return true;
         }
-
         return false;
     }
 
@@ -273,12 +272,5 @@ public class TrialDAOcsv implements TrialDAO{
 
         return t;
     }
-
-
-
-
-
-
-
 }
 
