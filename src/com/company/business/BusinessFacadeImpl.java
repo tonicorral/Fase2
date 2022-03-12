@@ -58,17 +58,17 @@ public class BusinessFacadeImpl implements BusinessFacade{
 
     @Override
     public void createEdition(int year, int numPlayers, int numTrials, int[] nums) {
-        editionManager.crearEdition(year, numPlayers, numTrials, nums);
+        editionManager.crearEdition(year, numPlayers, numTrials, nums, pType);
     }
 
     @Override
     public int[] editionYear() {
-        return editionManager.listaEdition();
+        return editionManager.listaEdition(pType);
     }
 
     @Override
     public Edition addEditionTrial(int numEdition) {
-        Edition edition = editionManager.getEdition(numEdition);
+        Edition edition = editionManager.getEdition(numEdition, pType);
         ArrayList trials = new ArrayList();
 
         for (int i = 0; i < edition.getNumTrials(); i++) {
@@ -132,23 +132,23 @@ public class BusinessFacadeImpl implements BusinessFacade{
 
     @Override
     public boolean exitEdition(int numEdition) {
-        return editionManager.exitEdition(numEdition);
+        return editionManager.exitEdition(numEdition, pType);
     }
 
     @Override
     public int[] editionTrials(int numEdition) {
-        Edition edition = editionManager.getEdition(numEdition);
+        Edition edition = editionManager.getEdition(numEdition, pType);
         return edition.getNum();
     }
 
     @Override
     public void deleteEdition(int numEdition) {
-        editionManager.deleteEdition(numEdition);
+        editionManager.deleteEdition(numEdition, pType);
     }
 
     @Override
     public boolean checkCurrentEdition() {
-        if(editionManager.getCurrentEdition() == null) {
+        if(editionManager.getCurrentEdition(pType) == null) {
             return false;
         }
         return true;
@@ -156,7 +156,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
 
     @Override
     public int[] getCurrentEditionData() {
-        Edition edition = editionManager.getCurrentEdition();
+        Edition edition = editionManager.getCurrentEdition(pType);
         int year = edition.getYear();
         int numPlayers = edition.getNumPlayers();
 
@@ -197,16 +197,20 @@ public class BusinessFacadeImpl implements BusinessFacade{
             trial = "4";
         }
 
-        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(), players1, edition.getCurrentTrial()+1);
+        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(pType), players1, edition.getCurrentTrial()+1, pType);
 
         return doEdition(edition, players1, trial, types);
     }
 
-
+    /**
+     *
+     * @param players array de String con la informacion jugadores
+     * @return devuelve una String con los resultados de una edicion
+     */
     @Override
     public String[] startEdition(String[] players) {
-        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(),savePlayers(players),0);
-        Edition edition = addEditionTrial(editionManager.loadCurrentEdition());
+        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(pType),savePlayers(players),0, pType);
+        Edition edition = addEditionTrial(editionManager.loadCurrentEdition(pType));
         Player[] players0 = edition.getPlayers();
         Player[] players1;
         String trial;
@@ -233,7 +237,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
             trial = "4";
         }
 
-        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(), players1, 1);
+        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(pType), players1, 1, pType);
 
         return doEdition(edition, players1, trial, types);
 
@@ -403,7 +407,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
                         player[i].setWin(true);
                         b = true;
                     }
-                    else if (random.nextInt(100) <= trial.getProbDenegar()) {
+                    else if (random.nextInt(trial.getProbDenegar()+trial.getProbRevision()) <= trial.getProbDenegar()) {
                         switch (quartilNum) {
                             case '1':
                                 if(player[i].getType() != 0) {
@@ -441,7 +445,9 @@ public class BusinessFacadeImpl implements BusinessFacade{
                         player[i].setWin(false);
                         b = true;
                     }
-                    counter = counter + 1;
+                    else {
+                        counter = counter + 1;
+                    }
                 }while (!b);
 
                 player[i].setCounter(counter);
@@ -606,7 +612,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
     }
     @Override
     public Edition loadCurrentEdition() {
-        return editionManager.loadCurrentEdition();
+        return editionManager.loadCurrentEdition(pType);
     }
 
     @Override
@@ -618,9 +624,12 @@ public class BusinessFacadeImpl implements BusinessFacade{
         return false;
     }
 
+    /**
+     * Vaciar archivo donde se guarda la edicion que se ejecuta
+     */
     @Override
     public void clearCurrentEdition() {
-        editionManager.clearCurrentEdition();
+        editionManager.clearCurrentEdition(pType);
     }
 
     private Player[] savePlayers(String[] names) {
@@ -631,5 +640,4 @@ public class BusinessFacadeImpl implements BusinessFacade{
         }
         return players;
     }
-
 }

@@ -16,9 +16,10 @@ public class UIController {
         String trialName;
         String journalNme;
         String quartile;
-        int acc;
-        int rev;
-        int rej;
+        int acc = 0;
+        int rev = 0;
+        int rej = 0;
+        boolean perc = false;
 
         //Trial 2
         String masterName;
@@ -39,6 +40,7 @@ public class UIController {
         int numPruebas;
         int[] seleccionPruebas;
 
+
         bf.setPType(ui.askPersistence());
         while(true) {
 
@@ -54,10 +56,12 @@ public class UIController {
                                             trialName = ui.askString(ConsoleUIManager.askTrialName);
                                             journalNme = ui.askString(ConsoleUIManager.askTrialJournal);
                                             quartile = ui.askQuartile();
-                                            acc = ui.askInt(ConsoleUIManager.askAccessProb, 0, 100);
-                                            rev = ui.askInt(ConsoleUIManager.askRevProb, 0, 100);
-                                            rej = ui.askInt(ConsoleUIManager.askRejProb, 0, 100);
-                                            //Le decimos al DAO de business que cree la trial
+                                            while(!perc) {
+                                                acc = ui.askInt(ConsoleUIManager.askAccessProb, 0, 100);
+                                                rev = ui.askInt(ConsoleUIManager.askRevProb, 0, 100);
+                                                rej = ui.askInt(ConsoleUIManager.askRejProb, 0, 100);
+                                                perc = ui.checkPercentage(acc, rev, rej);
+                                            }
                                             bf.createTrial(trialName, journalNme, quartile, acc, rev, rej);
                                         break;
                                         case 2:

@@ -29,5 +29,6 @@ public interface UIManager {
     void showTrialERROR();
     String askQuartile();
     boolean askPersistence();
+    boolean checkPercentage(int acc, int rev, int rej);
     }
 

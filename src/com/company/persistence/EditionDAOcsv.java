@@ -118,7 +118,6 @@ public class EditionDAOcsv implements EditionDAO {
 
     @Override
     public String loadCurrent() {
-
         try {
             ArrayList<String> fileContent = new ArrayList<>(Files.readAllLines(pathCurrent));
             if(fileContent.size() == 0 || fileContent.get(0).equals("")){

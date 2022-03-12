@@ -565,6 +565,14 @@ public class ConsoleUIManager implements UIManager {
 
     }
 
+    @Override
+    public boolean checkPercentage(int acc, int rev, int rej) {
+        if(acc+rev+rej == 100) {
+            return true;
+        }
+        System.out.println("The sum of the three probabilities must be 100!\n");
+        return false;
+    }
 }
 
 
