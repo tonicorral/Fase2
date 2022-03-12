@@ -39,10 +39,9 @@ public class UIController {
         int numPruebas;
         int[] seleccionPruebas;
 
-        boolean persistenceType;
-
+        bf.setPType(ui.askPersistence());
         while(true) {
-            persistenceType = ui.askPersistence();
+
             switch (ui.showRoles()) {
                 case SELECT_COMPOSITOR:
                     switch (ui.opcionesCompositor()) {

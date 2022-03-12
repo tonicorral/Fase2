@@ -7,48 +7,53 @@ import java.util.Random;
 public class BusinessFacadeImpl implements BusinessFacade{
     private final TrialManager trialManager;        //Solo una vez
     private final EditionManager editionManager;
+    private boolean pType;
 
     public BusinessFacadeImpl() {
         trialManager = new TrialManager();
         editionManager = new EditionManager();
     }
+    @Override
+    public void setPType(boolean pType){
+        this.pType = pType;
+    }
 
     @Override   //Le passa los datos al manager para crear la prueba
     public void createTrial(String trialName, String trialJournal, String quartile, int acc, int rev, int rej) {
-        trialManager.crearPruebaPublicacion(trialName, trialJournal, quartile, acc, rev, rej,true);
+        trialManager.crearPruebaPublicacion(trialName, trialJournal, quartile, acc, rev, rej,true , pType);
     }
     public void createTrial(String trialName, String masterName, int credits, int prob){
-        trialManager.crearTrialMaster(trialName, masterName, credits, prob, true);
+        trialManager.crearTrialMaster(trialName, masterName, credits, prob, true , pType);
     }
     public void createTrial(String trialName, String b, int num, boolean check){
         if(check){
-            trialManager.crearTrialTesis(trialName, b, num, true);
+            trialManager.crearTrialTesis(trialName, b, num, true,  pType);
         }
         else{
-            trialManager.crearTrialBudget(trialName, b, num, true);
+            trialManager.crearTrialBudget(trialName, b, num, true , pType);
         }
     }
 
     @Override
     public String[] trialsNames() {
 
-        return trialManager.listaPruebas();
+        return trialManager.listaPruebas(pType);
     }
 
     @Override
     public String[] trialInfo(int numberTrial) {
 
-        return trialManager.infoPrueba(numberTrial);
+        return trialManager.infoPrueba(numberTrial, pType);
     }
 
     @Override
     public boolean trialExit(int numPrueba) {
-        return trialManager.trialExit(numPrueba);
+        return trialManager.trialExit(numPrueba, pType);
     }
 
     @Override
     public void deleteTrial(int numPrueba) {
-        trialManager.delete(numPrueba);
+        trialManager.delete(numPrueba, pType);
     }
 
     @Override
@@ -67,20 +72,20 @@ public class BusinessFacadeImpl implements BusinessFacade{
         ArrayList trials = new ArrayList();
 
         for (int i = 0; i < edition.getNumTrials(); i++) {
-            String[] prueba = trialManager.infoPrueba(edition.getNum()[i]);         //pillamos todos los datos de la prueba
+            String[] prueba = trialManager.infoPrueba(edition.getNum()[i], pType);         //pillamos todos los datos de la prueba
             switch (prueba[0]) {
                 case "1":
                     trials.add(trialManager.crearPruebaPublicacion(prueba[1], prueba[2], prueba[3], Integer.parseInt(prueba[4]),
-                            Integer.parseInt(prueba[5]), Integer.parseInt(prueba[6]), false));
+                            Integer.parseInt(prueba[5]), Integer.parseInt(prueba[6]), false, pType));
                     break;
                 case "2":
-                    trials.add(trialManager.crearTrialMaster(prueba[1], prueba[2], Integer.parseInt(prueba[3]),  Integer.parseInt(prueba[4]), false));
+                    trials.add(trialManager.crearTrialMaster(prueba[1], prueba[2], Integer.parseInt(prueba[3]),  Integer.parseInt(prueba[4]), false, pType));
                     break;
                 case "3":
-                    trials.add(trialManager.crearTrialTesis(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false));
+                    trials.add(trialManager.crearTrialTesis(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false, pType));
                     break;
                 case "4":
-                    trials.add(trialManager.crearTrialBudget(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false));
+                    trials.add(trialManager.crearTrialBudget(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false, pType));
                     break;
             }
 
@@ -579,20 +584,20 @@ public class BusinessFacadeImpl implements BusinessFacade{
         ArrayList trials = new ArrayList();
 
         for (int i = 0; i < edition.getNumTrials(); i++) {
-            String[] prueba = trialManager.infoPrueba(edition.getNum()[i]);         //pillamos todos los datos de la prueba
+            String[] prueba = trialManager.infoPrueba(edition.getNum()[i], pType);         //pillamos todos los datos de la prueba
             switch (prueba[0]) {
                 case "1":
                     trials.add(trialManager.crearPruebaPublicacion(prueba[1], prueba[2], prueba[3], Integer.parseInt(prueba[4]),
-                            Integer.parseInt(prueba[5]), Integer.parseInt(prueba[6]), false));
+                            Integer.parseInt(prueba[5]), Integer.parseInt(prueba[6]), false, pType));
                     break;
                 case "2":
-                    trials.add(trialManager.crearTrialMaster(prueba[1], prueba[2], Integer.parseInt(prueba[3]),  Integer.parseInt(prueba[4]), false));
+                    trials.add(trialManager.crearTrialMaster(prueba[1], prueba[2], Integer.parseInt(prueba[3]),  Integer.parseInt(prueba[4]), false, pType));
                     break;
                 case "3":
-                    trials.add(trialManager.crearTrialTesis(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false));
+                    trials.add(trialManager.crearTrialTesis(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false, pType));
                     break;
                 case "4":
-                    trials.add(trialManager.crearTrialBudget(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false));
+                    trials.add(trialManager.crearTrialBudget(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false, pType));
                     break;
             }
         }

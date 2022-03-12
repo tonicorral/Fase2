@@ -3,10 +3,7 @@ package com.company.persistence;
 import com.company.business.*;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
 
 import java.io.*;
 import java.nio.file.Files;
@@ -31,151 +28,178 @@ public class TrialDAOjson implements TrialDAO {
         }
     }
 
-    @Override
-    public void save(TrialPublicacionArticulo trial) {
+    private void saveToJson(Object trial){
         try {
-            JsonElement trialjson;
             Reader file = null;
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            ArrayList trials = new ArrayList<>();
-            JsonReader reader = null;
+            ArrayList <Object> trials = new ArrayList <>();
+            boolean empty = false;
 
-            trials.add(trial);
-            
+
             try {
                 file = new FileReader(path);
-                reader = new JsonReader(file);
+                if((file.read() == -1)){
+                    empty = true;
+                }
+                file = new FileReader(path);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
 
-            if(!(file.read() == -1)) {
-                trials.add(gson.fromJson(reader, Object.class));
+            if(!empty) {
+                trials = gson.fromJson(file, ArrayList.class);
             }
-
-            trialjson = gson.toJsonTree(trials);
+            trials.add(trial);
             FileWriter fileWriter = new FileWriter(path, false);
-            fileWriter.write(gson.toJson(trialjson));
+            fileWriter.write(gson.toJson(trials));
             fileWriter.flush();
             fileWriter.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @Override
+    public void save(TrialPublicacionArticulo trial) {
+        saveToJson(trial);
     }
 
     @Override
     public void save(TrialMaster trial) {
-        try {
-            JsonElement trialjson;
-            Reader file = null;
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            ArrayList trials = new ArrayList<>();
-            JsonReader reader = null;
-
-            trials.add(trial);
-
-            try {
-                file = new FileReader(path);
-                reader = new JsonReader(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            if(!(file.read() == -1)) {
-                trials.add(gson.fromJson(reader, Object.class));
-            }
-
-            System.out.println(trials.size());
-
-            trialjson = gson.toJsonTree(trials);
-            FileWriter fileWriter = new FileWriter(path, false);
-            fileWriter.write(gson.toJson(trialjson));
-            fileWriter.flush();
-            fileWriter.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        saveToJson(trial);
     }
 
     @Override
     public void save(TrialTesis trial) {
-
+        saveToJson(trial);
     }
 
     @Override
     public void save(TrialBudget trial) {
-
+        saveToJson(trial);
     }
 
     @Override
     public Trial[] getAll() {
-        return new Trial[0];
-    }
-
-    @Override
-    public TrialPublicacionArticulo getPublicacion(int numberTrial) {
         Reader file = null;
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        ArrayList trials = new ArrayList<>();
-        JsonReader reader = null;
+        ArrayList <Trial> trials = new ArrayList<>();
 
         try {
             file = new FileReader(path);
-            reader = new JsonReader(file);
-            if(!(file.read() == -1)) {
-                trials.add(gson.fromJson(reader, TrialPublicacionArticulo.class));
+            trials = gson.fromJson(file, trials.getClass());
+        } catch (java.io.IOException e ) {
+            e.printStackTrace();
+        }
+        Trial[] trialsArray;
+        if(trials != null) {
+            trialsArray = new Trial[trials.size()];
+            for (int i = 0; i < trials.size(); i++) {
+                Object o = trials.get(i);
+                trialsArray[i] = gson.fromJson(o.toString(), Trial.class);
             }
+        }
+        else{
+            trialsArray = new Trial[0];
+        }
+        return trialsArray;
+    }
+
+    private Object getTrial(int numberTrial){
+        Reader file = null;
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        ArrayList trials = new ArrayList<>();
+
+        try {
+            file = new FileReader(path);
+            trials = gson.fromJson(file, ArrayList.class);
+
         } catch (java.io.IOException e ) {
             e.printStackTrace();
         }
 
-        return (TrialPublicacionArticulo) trials.get(numberTrial);
+        return  trials.get(numberTrial-1);
+    }
+    @Override
+    public TrialPublicacionArticulo getPublicacion(int numberTrial) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.fromJson(getTrial(numberTrial).toString(), TrialPublicacionArticulo.class);
     }
 
     @Override
     public TrialMaster getMaster(int numberTrial) {
-        Reader file = null;
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        ArrayList trials = new ArrayList<>();
-        JsonReader reader = null;
-
-        try {
-            file = new FileReader(path);
-            reader = new JsonReader(file);
-            if(!(file.read() == -1)) {
-                trials.add(gson.fromJson(reader, TrialMaster.class));
-            }
-        } catch (java.io.IOException e ) {
-            e.printStackTrace();
-        }
-
-        return (TrialMaster) trials.get(numberTrial);
+        return gson.fromJson(getTrial(numberTrial).toString(), TrialMaster.class);
     }
 
     @Override
     public TrialTesis getTesis(int numberTrial) {
-        return null;
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.fromJson(getTrial(numberTrial).toString(), TrialTesis.class);
     }
 
     @Override
     public TrialBudget getBudget(int numberTrial) {
-        return null;
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.fromJson(getTrial(numberTrial).toString(), TrialBudget.class);
     }
 
     @Override
     public boolean trialExit(int numPrueba) {
+        Trial[] trials = getAll();
+        if(trials.length +1 == numPrueba){
+            return true;
+        }
         return false;
     }
 
     @Override
     public void delete(int numPrueba) {
+        try {
+            Reader file = null;
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            ArrayList <Object> trials = new ArrayList <>();
+            boolean empty = false;
 
+
+            try {
+                file = new FileReader(path);
+                if((file.read() == -1)){
+                    empty = true;
+                }
+                file = new FileReader(path);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if(!empty) {
+                trials = gson.fromJson(file, ArrayList.class);
+            }
+            trials.remove(numPrueba - 1);
+            FileWriter fileWriter = new FileWriter(path, false);
+            fileWriter.write(gson.toJson(trials));
+            fileWriter.flush();
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getType(int numPrueba) {
-        return 0;
+        Object o = getTrial(numPrueba);
+        if(o.toString().contains("nombreRevista")){
+            return 1;
+        }
+        else if(o.toString().contains("masterName")){
+            return 2;
+        }
+        else if (o.toString().contains("study")){
+            return 3;
+        }
+        else{
+            return 4;
+        }
     }
 }

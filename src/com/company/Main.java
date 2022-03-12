@@ -19,16 +19,19 @@ public class Main {
         TrialDAO trialDAO = new TrialDAOcsv("data/trials.csv");
         BusinessFacade businessFacade = new BusinessFacadeImpl();
         UIController uiController = new UIController(consoleUIManager, businessFacade);
-        TrialDAOjson trialDAOjson = new TrialDAOjson("data/trials.json");
-        TrialPublicacionArticulo trialPublicacionArticulojson = new TrialPublicacionArticulo("fdd", "dd",
+     /* TrialDAOjson trialDAOjson = new TrialDAOjson("data/trials.json");
+       TrialPublicacionArticulo trialPublicacionArticulojson = new TrialPublicacionArticulo("fdd", "dd",
                 "d3", 36, 75, 67);
         trialDAOjson.save(trialPublicacionArticulojson);
+
         System.out.println(trialDAOjson.getPublicacion(0).getNombreRevista());
         TrialMaster trialMaster = new TrialMaster("namemaster", "ddd", 70, 30);
         trialDAOjson.save(trialMaster);
         trialDAOjson.save(trialMaster);
-        System.out.println(trialDAOjson.getMaster(1).getMasterName());
-        uiController.run();
+        System.out.println(trialDAOjson.getMaster(3).getMasterName());
+        trialDAOjson.getAll();
+       */ uiController.run();
+
 
     }
 }
