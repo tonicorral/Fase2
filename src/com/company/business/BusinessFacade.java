@@ -24,5 +24,4 @@ public interface BusinessFacade {
     boolean checkEditionFinish();
     void clearCurrentEdition();
     void setPType(boolean pType);
-
 }

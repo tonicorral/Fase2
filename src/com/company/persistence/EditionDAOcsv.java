@@ -109,7 +109,7 @@ public class EditionDAOcsv implements EditionDAO {
 
     @Override
     public void saveCurrent(Edition edition, Player[] players, int currentTrial) {
-        try { //String a = ""
+        try {
             Files.write(pathCurrent, Collections.singletonList(currentEditionToCSV(edition, players, currentTrial)), StandardOpenOption.WRITE);
         } catch (IOException e) {
             e.printStackTrace();
@@ -160,8 +160,6 @@ public class EditionDAOcsv implements EditionDAO {
         return data;
     }
 
-
-    //info a texto
     private String editionToCSV(Edition edition) {
         String file;
         int[] numeros = edition.getNum();
@@ -199,5 +197,4 @@ public class EditionDAOcsv implements EditionDAO {
 
         return t;
     }
-
 }

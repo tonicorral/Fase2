@@ -28,7 +28,7 @@ public class TrialDAOjson implements TrialDAO {
         }
     }
 
-    private void saveToJson(Object trial){
+    private void saveToJson(Object trial) {
         try {
             Reader file = null;
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -105,7 +105,7 @@ public class TrialDAOjson implements TrialDAO {
         return trialsArray;
     }
 
-    private Object getTrial(int numberTrial){
+    private Object getTrial(int numberTrial) {
         Reader file = null;
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         ArrayList trials = new ArrayList<>();

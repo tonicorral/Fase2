@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 public class BusinessFacadeImpl implements BusinessFacade{
-    private final TrialManager trialManager;        //Solo una vez
+    private final TrialManager trialManager;
     private final EditionManager editionManager;
     private boolean pType;
 
@@ -22,10 +22,10 @@ public class BusinessFacadeImpl implements BusinessFacade{
     public void createTrial(String trialName, String trialJournal, String quartile, int acc, int rev, int rej) {
         trialManager.crearPruebaPublicacion(trialName, trialJournal, quartile, acc, rev, rej,true , pType);
     }
-    public void createTrial(String trialName, String masterName, int credits, int prob){
+    public void createTrial(String trialName, String masterName, int credits, int prob) {
         trialManager.crearTrialMaster(trialName, masterName, credits, prob, true , pType);
     }
-    public void createTrial(String trialName, String b, int num, boolean check){
+    public void createTrial(String trialName, String b, int num, boolean check) {
         if(check){
             trialManager.crearTrialTesis(trialName, b, num, true,  pType);
         }
@@ -354,7 +354,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
         return results;
     }
 
-    private Player[] executeTrial (TrialPublicacionArticulo trial, Player[] player){
+    private Player[] executeTrial (TrialPublicacionArticulo trial, Player[] player) {
 
         Random random = new Random();
         boolean b;

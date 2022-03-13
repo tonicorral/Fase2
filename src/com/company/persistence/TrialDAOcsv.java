@@ -212,17 +212,17 @@ public class TrialDAOcsv implements TrialDAO{
 
         return file;
     }
-    private String trialToCSV(TrialTesis trial){
+    private String trialToCSV(TrialTesis trial) {
         String file;
         file = "3,"+ trial.getNombre()+","+trial.getStudy()+","+trial.getDificulty()+";";
         return file;
     }
-    private String trialToCSV(TrialBudget trial){
+    private String trialToCSV(TrialBudget trial) {
         String file;
         file = "4,"+ trial.getNombre()+","+trial.getEntity()+","+trial.getBudget()+";";
         return file;
     }
-    private int checkTrial(String trial){
+    private int checkTrial(String trial) {
         String[] a;
 
         a = trial.split(",");
@@ -239,7 +239,6 @@ public class TrialDAOcsv implements TrialDAO{
 
         return t;
     }
-
 
     private TrialMaster trialFromCSV2(String trial) {
         TrialMaster t;

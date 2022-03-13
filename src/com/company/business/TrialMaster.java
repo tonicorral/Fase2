@@ -9,19 +9,13 @@ public class TrialMaster extends Trial{
         return masterName;
     }
 
-
-
     public int getProbCredit() {
         return probCredit;
     }
 
-
-
     public int getCreditNumber() {
         return creditNumber;
     }
-
-
 
     public TrialMaster(String nombre, String masterName, int creditNumber, int probCredit) {
         super(nombre);
@@ -30,5 +24,4 @@ public class TrialMaster extends Trial{
         this.probCredit = probCredit;
 
     }
-
 }

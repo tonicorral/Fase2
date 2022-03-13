@@ -43,7 +43,6 @@ public class UIController {
 
         bf.setPType(ui.askPersistence());
         while(true) {
-
             switch (ui.showRoles()) {
                 case SELECT_COMPOSITOR:
                     switch (ui.opcionesCompositor()) {
@@ -197,9 +196,7 @@ public class UIController {
                             System.exit(0);
                         }
                     }while (true);
-
             }
         }
-
     }
 }
