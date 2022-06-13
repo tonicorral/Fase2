@@ -12,9 +12,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+/**
+ * Implementa las funciones del DAO de las pruebas en JSON
+ */
 public class TrialDAOjson implements TrialDAO {
     private String path;
 
+    /**
+     * Constructor donde inicializamos el path
+     * @param path ruta que se ejecuta
+     */
     public TrialDAOjson(String path) {
         try {
             Path p = Paths.get(path);       //ruta donde guardamos los archivos
@@ -28,13 +35,16 @@ public class TrialDAOjson implements TrialDAO {
         }
     }
 
+    /**
+     * Guardamos la prueba en formato JSON
+     * @param trial prueba tipo Object
+     */
     private void saveToJson(Object trial) {
         try {
             Reader file = null;
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             ArrayList <Object> trials = new ArrayList <>();
             boolean empty = false;
-
 
             try {
                 file = new FileReader(path);
@@ -59,26 +69,47 @@ public class TrialDAOjson implements TrialDAO {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Guardar prueba tipo Publicacion Articulo
+     * @param trial prueba tipo TrialPublicacionArticulo
+     */
     @Override
     public void save(TrialPublicacionArticulo trial) {
         saveToJson(trial);
     }
 
+    /**
+     * Guardar prueba tipo Master
+     * @param trial prueba tipo TrialMaster
+     */
     @Override
     public void save(TrialMaster trial) {
         saveToJson(trial);
     }
 
+    /**
+     * Guardar prueba tipo Tesis
+     * @param trial prueba tipo TrialTesis
+     */
     @Override
     public void save(TrialTesis trial) {
         saveToJson(trial);
     }
 
+    /**
+     * Guardar prueba tipo Budget
+     * @param trial prueba tipo TrialBudget
+     */
     @Override
     public void save(TrialBudget trial) {
         saveToJson(trial);
     }
 
+    /**
+     * Acceder a todas las pruebas
+     * @return devuelve todas las pruebas
+     */
     @Override
     public Trial[] getAll() {
         Reader file = null;
@@ -120,30 +151,56 @@ public class TrialDAOjson implements TrialDAO {
 
         return  trials.get(numberTrial-1);
     }
+
+    /**
+     * Accedemos a la prueba tipo Publicacion Articulo
+     * @param numberTrial numero de la prueba que se quiere acceder
+     * @return devuelve la prueba tipo TrialPublicacionArticulo
+     */
     @Override
     public TrialPublicacionArticulo getPublicacion(int numberTrial) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.fromJson(getTrial(numberTrial).toString(), TrialPublicacionArticulo.class);
     }
 
+    /**
+     * Accedemos a la prueba tipo Master
+     * @param numberTrial numero de la prueba que se quiere acceder
+     * @return devuelve la prueba tipo TrialMaster
+     */
     @Override
     public TrialMaster getMaster(int numberTrial) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.fromJson(getTrial(numberTrial).toString(), TrialMaster.class);
     }
 
+    /**
+     * Accedemos a la prueba tipo Tesis
+     * @param numberTrial numero de la prueba que se quiere acceder
+     * @return devuelve la prueba tipo TrialTesis
+     */
     @Override
     public TrialTesis getTesis(int numberTrial) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.fromJson(getTrial(numberTrial).toString(), TrialTesis.class);
     }
 
+    /**
+     * Accedemos a la prueba tipo Budget
+     * @param numberTrial numero de la prueba que se quiere acceder
+     * @return devuelve la prueba tipo TrialBudget
+     */
     @Override
     public TrialBudget getBudget(int numberTrial) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.fromJson(getTrial(numberTrial).toString(), TrialBudget.class);
     }
 
+    /**
+     * Salir de la prueba
+     * @param numPrueba numero de la prueba que se quiere salir
+     * @return devuelve si se quiere salir o no de la prueba
+     */
     @Override
     public boolean trialExit(int numPrueba) {
         Trial[] trials = getAll();
@@ -153,6 +210,10 @@ public class TrialDAOjson implements TrialDAO {
         return false;
     }
 
+    /**
+     * Eliminar prueba
+     * @param numPrueba numero de la prueba que se quiere eliminar
+     */
     @Override
     public void delete(int numPrueba) {
         try {
@@ -186,6 +247,11 @@ public class TrialDAOjson implements TrialDAO {
         }
     }
 
+    /**
+     * Acceder al tipo de prueba
+     * @param numPrueba numero de la prueba que se quiere tractar
+     * @return devuelve el tipo de prueba
+     */
     @Override
     public int getType(int numPrueba) {
         Object o = getTrial(numPrueba);

@@ -2,6 +2,9 @@ package com.company.presentation;
 
 import java.util.Scanner;
 
+/**
+ * Mostrar por pantalla los diferentes mensajes del programa
+ */
 public class ConsoleUIManager implements UIManager {
     private Scanner scanner;
 
@@ -27,9 +30,17 @@ public class ConsoleUIManager implements UIManager {
     public static final String askDuplicateYear = "Enter the new edition’s year:";
     public static final String askDuplicateNumPlayers = "Enter the new edition’s initial number of players:";
 
+    /**
+     * Crear scanner para leer lo que ponga el usuario
+     */
     public ConsoleUIManager() {
         this.scanner = new Scanner(System.in);      //crear scanner para leer lo que ponga el usuario
     }
+
+    /**
+     * Elegir el rol que desee el usuario
+     * @return Seleccionar entre el compositor o el conductor
+     */
     @Override
     public MenuOptions showRoles() {
         while (true) {
@@ -55,6 +66,10 @@ public class ConsoleUIManager implements UIManager {
         }
     }
 
+    /**
+     * Opciones del rol compositor
+     * @return Elegir entre manejar las pruebas o las ediciones
+     */
     @Override
     public MenuOptions opcionesCompositor() {
         System.out.println("Entering managment mode...\n");
@@ -81,6 +96,10 @@ public class ConsoleUIManager implements UIManager {
         return null;
     }
 
+    /**
+     * Menu de controlar las pruebas
+     * @return Elegir entre las diferentes acciones posibles: crear, lista, eliminar o volver a elegir rol
+     */
     @Override
     public MenuOptions menuTrials() {
         do{
@@ -111,6 +130,10 @@ public class ConsoleUIManager implements UIManager {
         }while(true);
     }
 
+    /**
+     * Elegir el tipo de prueba que queremos tratar
+     * @return Devolver el tipo de pruba que ha deseado el usuario: Paper publication, Master studies, Doctoral thesis defense o Budget request
+     */
     @Override
     public int askTrialsTypes() {
         System.out.println("--- Trial types ---");
@@ -122,6 +145,11 @@ public class ConsoleUIManager implements UIManager {
         return askInt("Enter the trial’s type:", 1, 4);
     }
 
+    /**
+     * Mostar el nombre de la prueba
+     * @param names String con el nombre que elegido el usuario
+     * @return devuelve la opcion elegida por el usuario
+     */
     @Override
     public int showTrialsName(String[] names) {
         int i;
@@ -133,6 +161,10 @@ public class ConsoleUIManager implements UIManager {
         return askInt("Enter an option: ");
     }
 
+    /**
+     * Mostrar toda la informacion de la prueba escrita por el usuario
+     * @param data guardar las diferentes informaciones segun el tipo de prueba
+     */
     @Override
     public void showTrialData(String[] data) {
 
@@ -160,27 +192,46 @@ public class ConsoleUIManager implements UIManager {
         }
     }
 
+    /**
+     * Mensaje informativo de cargando las pruebas
+     */
     @Override
     public void listTrialsText() {
         System.out.println("Here are the current trials, do you want to see more details or go back?\n");
     }
 
+    /**
+     * Mensaje de querrer eliminar la prueba en cuestion
+     */
     @Override
     public void deleteTrialsText() {
         System.out.println("Which trial do you want to delete?\n");
     }
 
+    /**
+     * Confirmacion de eliminar la prueba mediante su nombre
+     * @param numPrueba numero de la prueba que se eliminara
+     * @param names nombre de la prueba que se eliminara
+     * @return devolver la prueba que se ha eliminado
+     */
     @Override
     public boolean deleteConfirmation(int numPrueba, String[] names) {
         String name = askString("\nEnter the trial’s name for confirmation:");
         return name.equalsIgnoreCase(names[numPrueba - 1]);
     }
 
+    /**
+     * Mensaje informativo de que se ha eliminado satisfactoriamente
+     */
     @Override
     public void deleteOK() {
         System.out.println("\nThe trial was successfully deleted.\n");
     }
 
+    /**
+     * Menu de las diferentes opciones de gestionar la edicion
+     * @return devuelve la accion que se desea ejecutar: crear, lista, duplicar, eliminar o volver al menu anterior.
+     */
     @Override
     public MenuOptions menuEditions() {
         System.out.println("\ta) Create Edition");
@@ -215,6 +266,12 @@ public class ConsoleUIManager implements UIManager {
 
     }
 
+    /**
+     * Elegir que prueba queremos para crear una edicion
+     * @param nameTrial nombre de la prueba que queremos gestionar
+     * @param numPruebas numero de la prueba que queremos gestionar
+     * @return devuelve la prueba que ha elegido el usuario
+     */
     @Override
     public int[] pickEditionTrials(String[] nameTrial, int numPruebas) {
         if(nameTrial.length < 3) {
@@ -236,6 +293,11 @@ public class ConsoleUIManager implements UIManager {
         return nums;
     }
 
+    /**
+     * Elegir las ediciones que queremos visualizar segun el año de la prueba
+     * @param years año de la prueba
+     * @return devolver la opcion que quiere listar el usuario
+     */
     @Override
     public int showEditionYears(int[] years) {
         int i;
@@ -248,6 +310,10 @@ public class ConsoleUIManager implements UIManager {
         return askInt("Enter an option: ");
     }
 
+    /**
+     * Mostar la informacion de la edicion elegida por el usuario
+     * @param info String con los datos de la edicion
+     */
     @Override
     public void showEditionData(String[] info) {
         System.out.println("Year: "+info[0]);
@@ -262,6 +328,10 @@ public class ConsoleUIManager implements UIManager {
         }
     }
 
+    /**
+     * Mensajes de las diferentes opciones que puede hacer el usuario
+     * @param option segun la opcion que eliga se ejecutara: lista, duplicar o eliminar ediciones
+     */
     @Override
     public void showEditionMessage(MenuOptions option) {
         switch (option){
@@ -278,6 +348,11 @@ public class ConsoleUIManager implements UIManager {
         }
     }
 
+    /**
+     * Confirmar el año de la edicion que se quiere eliminar
+     * @param editionYear comprovar que el año elegido por el usuario coincide con las ya creadas
+     * @return devolver el año de la prueba que se quiere eliminar si existe
+     */
     @Override
     public boolean askDeleteYear(int editionYear) {
         int year = askInt("Enter the edition’s year for confirmation:");
@@ -287,6 +362,11 @@ public class ConsoleUIManager implements UIManager {
          return false;
     }
 
+    /**
+     * Pedir informacion de tipo String
+     * @param text texto del cual queremos tratar
+     * @return devuelve la String
+     */
     @Override
     public String askString(String text) {
         System.out.println(text);
@@ -301,6 +381,11 @@ public class ConsoleUIManager implements UIManager {
         }while(true);
     }
 
+    /**
+     * Pedir informacion de tipo int
+     * @param text texto del cual queremos tratar
+     * @return devuelve el texto transformado a int
+     */
     @Override
     public int askInt(String text) {
         System.out.println(text);
@@ -315,6 +400,13 @@ public class ConsoleUIManager implements UIManager {
         }while(true);
     }
 
+    /**
+     * Pedir tipo int entre dos valores eligidos por el usuario
+     * @param text texto del cual queremos tratar
+     * @param min numero minimio que puede introducir el usuario
+     * @param max numero maximo que puede introducir el usuario
+     * @return devuelve el int que ha elegido el usuario
+     */
     @Override
     public int askInt(String text, int min, int max) {
         System.out.println(text);
@@ -333,6 +425,10 @@ public class ConsoleUIManager implements UIManager {
         }while(true);
     }
 
+    /**
+     * Mensaje informativo de que no ha creado ninguna edicion anteriormente
+     * @param year año de la edicion
+     */
     @Override
     public void noCurrentEdition(int year) {
         System.out.println("\nEntering execution mode...\n");
@@ -340,6 +436,12 @@ public class ConsoleUIManager implements UIManager {
         System.out.println("Shutting down...");
     }
 
+    /**
+     * Nombre de los jugadores de las pruebas
+     * @param year año de la prueba que queremos gestionar
+     * @param numPlayers numero de jugadores que hay en la prueba
+     * @return devuelve el nombre de los jugadores
+     */
     @Override
     public String[] askPlayers(int year, int numPlayers) {
         System.out.println("Entering execution mode...\n");
@@ -353,6 +455,10 @@ public class ConsoleUIManager implements UIManager {
         return names;
     }
 
+    /**
+     * Mensaje de si el usuario quiere continuar la ejecucion
+     * @return devolver la opcion que quiere hacer el usuario, si seguir o no
+     */
     @Override
     public boolean askToContinue() {
         while (true) {
@@ -366,6 +472,10 @@ public class ConsoleUIManager implements UIManager {
         }
     }
 
+    /**
+     * Mostrar los resultados de la ejecucion
+     * @param results informacion de los diferentes tipos de pruebas
+     */
     @Override
     public void showResults(String[] results) {
         int numPlayers = Integer.parseInt(results[3]);
@@ -468,11 +578,19 @@ public class ConsoleUIManager implements UIManager {
         }
     }
 
+    /**
+     * Mensaje de saliendo del programa
+     */
     @Override
     public void exitProgram() {
         System.out.println("Saving & Shutting down...");
     }
 
+    /**
+     * Mostrar si los jugadores han ganado o perdido
+     * @param results gestionar los resultados segun los tipos de prueba
+     * @param year el año de la prueba del cual estaba ejecutando el usuario
+     */
     @Override
     public void showEditionResult(String[] results, int year) {
         boolean r = false;
@@ -523,11 +641,18 @@ public class ConsoleUIManager implements UIManager {
         System.out.println("Shutting down...");
     }
 
+    /**
+     * Mensaje de que hay que haber 3 pruebas creadas anteriormente para crear una edicion
+     */
     @Override
     public void showTrialERROR() {
         System.out.println("There must be at least 3 trials to create a edition!");
     }
 
+    /**
+     * Mostrar al usuario las restricciones del quartile
+     * @return devuelve el quartile escrito por el usuario
+     */
     @Override
     public String askQuartile() {
         String quartile;
@@ -535,13 +660,17 @@ public class ConsoleUIManager implements UIManager {
 
         do{
             quartile = scanner.nextLine();
-            if(quartile.charAt(0) == 'd' && quartile.length() == 2 && quartile.charAt(1) > '0' && quartile.charAt(1) < '5' ) {
+            if((quartile.charAt(0) == 'q' || quartile.charAt(0) == 'Q') && quartile.length() == 2 && quartile.charAt(1) > '0' && quartile.charAt(1) < '5' ) {
                 return quartile;
             }
-            System.out.println("Quartile must be 'd + [1,4]'. Please enter it again");
+            System.out.println("Quartile must be 'q + [1,4]'. Please enter it again");
         }while(true);
     }
 
+    /**
+     * Preguntar el formato que desea guardar el usuario
+     * @return devuelve el tipo de persistencia que el usuario quiere guardar
+     */
     @Override
     public boolean askPersistence() {
         String faction;
@@ -565,6 +694,13 @@ public class ConsoleUIManager implements UIManager {
 
     }
 
+    /**
+     * Restriccion de las probabilidades de la prueba paper publication
+     * @param acc probabilidad de aceptar
+     * @param rev probabilidad de revisar
+     * @param rej probabilidad de denegar
+     * @return devuelve si la suma de las 3 da 100
+     */
     @Override
     public boolean checkPercentage(int acc, int rev, int rej) {
         if(acc+rev+rej == 100) {

@@ -1,5 +1,8 @@
 package com.company.presentation;
 
+/**
+ * Opciones del menu y los submenus del programa
+ */
 public enum MenuOptions {
     SELECT_COMPOSITOR,
     SELECT_CONDUCTOR,

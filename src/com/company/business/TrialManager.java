@@ -6,14 +6,32 @@ import com.company.persistence.TrialDAOjson;
 
 import java.util.ArrayList;
 
+/**
+ * Manejar las pruebas
+ */
 public class TrialManager {
     private final TrialDAO trialDAOcsv, trialDAOjson;
 
+    /**
+     * Inicializamos el formato de persistencia que se desea guardar, csv o json
+     */
     public TrialManager() {
         trialDAOcsv = new TrialDAOcsv("data/trials.csv");
         trialDAOjson = new TrialDAOjson("data/trials.json");
     }
 
+    /**
+     * Crear la prueba de tipo Publicacion Articulo
+     * @param nombrePrueba nombre de la prueba
+     * @param nombreRevista nombre de la revista
+     * @param quartil dificultad
+     * @param probAceptar probabilidad de aceptar
+     * @param probRevision probabilidad de revisar
+     * @param probDenegar probabilidad de denegar
+     * @param save guardar la prueba
+     * @param pType tipo de persistencia en que se guardara
+     * @return devuelve la prueba Publicacion Articulo
+     */
     public TrialPublicacionArticulo crearPruebaPublicacion(String nombrePrueba, String nombreRevista, String quartil, int probAceptar,
                                        int probRevision, int probDenegar, boolean save, boolean pType) {
 
@@ -28,10 +46,19 @@ public class TrialManager {
             }
         }
 
-
         return prueba;
     }
 
+    /**
+     * Crear la prueba tipo Master
+     * @param nombrePrueba nombre de la prueba
+     * @param masterName nombre del master
+     * @param credits creditos para acceder al master
+     * @param prob probabilidad de aprobar un credito
+     * @param save guardar la prueba
+     * @param pType tipo de persistencia en que se guardara
+     * @return devuelve la prueba de tipo Master
+     */
     public TrialMaster crearTrialMaster(String nombrePrueba, String masterName, int credits, int prob, boolean save, boolean pType){
         TrialMaster prueba = new TrialMaster(nombrePrueba,  masterName,  credits,  prob);
         if(save) {
@@ -44,6 +71,16 @@ public class TrialManager {
         }
         return prueba;
     }
+
+    /**
+     * Crear la prueba tipo tesis
+     * @param nombrePrueba nombre de la prueba
+     * @param study campo de estudios
+     * @param dificulty dificultad de defensa
+     * @param save guardar la prueba
+     * @param pType tipo de persistencia en que se guardara
+     * @return devuelve la prueba de tipo Tesis
+     */
     public TrialTesis crearTrialTesis(String nombrePrueba, String study, int dificulty, boolean save, boolean pType){
         TrialTesis prueba = new TrialTesis(nombrePrueba, study, dificulty);
         if(save) {
@@ -56,6 +93,16 @@ public class TrialManager {
         }
         return prueba;
     }
+
+    /**
+     * Crear la prueba de tipo Budget
+     * @param nombrePrueba nombre de la prueba
+     * @param entity entidad que se le pedi presupuesto
+     * @param budget presupuesto
+     * @param save guardar la prueba
+     * @param pType tipo de persistencia
+     * @return devuelve la prueba tipo Budget
+     */
     public TrialBudget crearTrialBudget(String nombrePrueba, String entity, int budget, boolean save, boolean pType){
         TrialBudget prueba = new TrialBudget(nombrePrueba,  entity, budget);
         if(save) {
@@ -69,6 +116,11 @@ public class TrialManager {
         return prueba;
     }
 
+    /**
+     * Lista de las pruebas
+     * @param pType tipo de persisntencia en la que se trabaja
+     * @return devuelve una lista de todas las pruebas que hay
+     */
     public String[] listaPruebas(boolean pType) {
         Trial[] trials;
         if(!pType) {
@@ -85,6 +137,12 @@ public class TrialManager {
         return names.toArray(new String[names.size()]);
     }
 
+    /**
+     * Datos de la prueba dependiendo su tipo y persistencia
+     * @param numberPrueba numero de la prueba que se gestiona
+     * @param pType tipo de persistencia en la que se trabaja
+     * @return devuelve toda la informacion de la prueba
+     */
     public  String[] infoPrueba(int numberPrueba, boolean pType) {
         int type;
         if(!pType){
@@ -143,6 +201,12 @@ public class TrialManager {
         }
     }
 
+    /**
+     * Salir de la prueba
+     * @param numPrueba numero de la prueba que se quiere gestionar
+     * @param pType tipo de persistencia en la que se trabaja
+     * @return devuelve si se quiere salir o no de la prueba
+     */
     public boolean trialExit(int numPrueba, boolean pType) {
         if(!pType) {
             return trialDAOcsv.trialExit(numPrueba);
@@ -152,6 +216,11 @@ public class TrialManager {
         }
     }
 
+    /**
+     * Eliminar la prueba
+     * @param numPrueba numero de la prueba que se quiere eliminar
+     * @param pType tipo de persistencia en la que se trabaja
+     */
     public void delete(int numPrueba, boolean pType) {
         if(!pType){
             trialDAOcsv.delete(numPrueba);
@@ -160,6 +229,4 @@ public class TrialManager {
             trialDAOjson.delete(numPrueba);
         }
     }
-
-
 }

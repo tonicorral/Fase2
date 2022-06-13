@@ -1,19 +1,24 @@
 package com.company.persistence;
 
-import com.company.business.Edition;
-import com.company.business.Player;
-import com.company.business.Trial;
-import com.company.business.TrialPublicacionArticulo;
+import com.company.business.*;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Implementa funciones del DAO de las ediciones en CSV
+ */
 public class EditionDAOcsv implements EditionDAO {
     private Path path;
     private Path pathCurrent;
 
+    /**
+     * Constructor donde incicialiazamos el path y pathCurrent
+     * @param path ruta que se ejecuta
+     * @param pathCurrent ruta que se esta ejecutando actualmente
+     */
     public EditionDAOcsv(String path, String pathCurrent) {
         try {
             Path p = Paths.get(path);       //ruta donde guardamos los archivos
@@ -32,6 +37,10 @@ public class EditionDAOcsv implements EditionDAO {
         }
     }
 
+    /**
+     * Guardar la edicion
+     * @param edition datos de la clase Edition
+     */
     @Override
     public void save(Edition edition) {
         try {
@@ -41,6 +50,10 @@ public class EditionDAOcsv implements EditionDAO {
         }
     }
 
+    /**
+     * Acceder a todas las ediciones
+     * @return devuelve todas las ediciones
+     */
     @Override
     public Edition[] getAll() {
         ArrayList<Edition> edition = new ArrayList<>();
@@ -58,6 +71,11 @@ public class EditionDAOcsv implements EditionDAO {
         return edition.toArray(new Edition[edition.size()]);
     }
 
+    /**
+     * Acceder a una edicion en  concreto
+     * @param numEdition numero de la edicion que queremos trabajar
+     * @return devuelve la edicion en concreto que deseamos
+     */
     @Override
     public Edition get(int numEdition) {
         ArrayList<Edition> editions = new ArrayList<>();
@@ -74,6 +92,11 @@ public class EditionDAOcsv implements EditionDAO {
         return editions.get(numEdition-1);
     }
 
+    /**
+     * Salir de la edicion
+     * @param numEdition numero de la edicion que se quedra salir
+     * @return devuelve si se quiere salir o no de la edicion
+     */
     @Override
     public boolean exitEdition(int numEdition) {
         Edition[] editions = getAll();      //llamamos a la funcion
@@ -83,6 +106,10 @@ public class EditionDAOcsv implements EditionDAO {
         return false;
     }
 
+    /**
+     * Eliminar edicion
+     * @param numEdition numero de la edicion que se quiere eliminar
+     */
     @Override
     public void delete(int numEdition) {
         ArrayList<Edition> edition = new ArrayList<>();
@@ -107,8 +134,14 @@ public class EditionDAOcsv implements EditionDAO {
         }
     }
 
+    /**
+     * Guardar la edicion actual
+     * @param edition tipo Edition que contiene toda la informacion de la edicion
+     * @param players jugadores que hay en la edicion
+     * @param currentTrial prueba actual
+     */
     @Override
-    public void saveCurrent(Edition edition, Player[] players, int currentTrial) {
+    public void saveCurrent(Edition edition, Object[] players, int currentTrial) {
         try {
             Files.write(pathCurrent, Collections.singletonList(currentEditionToCSV(edition, players, currentTrial)), StandardOpenOption.WRITE);
         } catch (IOException e) {
@@ -116,6 +149,10 @@ public class EditionDAOcsv implements EditionDAO {
         }
     }
 
+    /**
+     * Cargar la edicion actual
+     * @return devuelve la edicion actual
+     */
     @Override
     public String loadCurrent() {
         try {
@@ -131,6 +168,9 @@ public class EditionDAOcsv implements EditionDAO {
         return null;
     }
 
+    /**
+     * Comprueba si esta vacia la edicion
+     */
     @Override
     public void emptyCurrent() {
         try {
@@ -141,7 +181,7 @@ public class EditionDAOcsv implements EditionDAO {
         }
     }
 
-    private String currentEditionToCSV(Edition edition, Player[] players, int currentTrial) {
+    private String currentEditionToCSV(Edition edition, Object[] players, int currentTrial) {
         int year = edition.getYear();
         int numPlayers = edition.getNumPlayers();
         String[] name = new String[numPlayers];
@@ -150,9 +190,21 @@ public class EditionDAOcsv implements EditionDAO {
         String data = year+","+numPlayers+",";
 
         for (int i = 0; i < numPlayers; i++) {
-            name[i] = players[i].getName();
-            PI[i] = players[i].getPI();
-            type[i] = players[i].getType();
+            Player player;
+
+            if(players[i] instanceof Engineer) {
+                type[i] = 0;
+            }
+            else if(players[i] instanceof Doctor) {
+                 type[i] = 1;
+            }
+            else {
+                type[i] = 2;
+            }
+
+            player = (Player) players[i];
+            name[i] = player.getName();
+            PI[i] = player.getPI();
             data = data+name[i]+","+PI[i]+","+type[i]+",";
         }
         data = data+currentTrial+";";

@@ -2,15 +2,26 @@ package com.company.presentation;
 
 import com.company.business.BusinessFacade;
 
+/**
+ * Controlar las acciones que suceden en cada momento
+ */
 public class UIController {
     private final UIManager ui;
     private final BusinessFacade bf;
 
+    /**
+     * Asignar los valores iniciales de los controladores de las capas
+     * @param ui enlazar con la capa de presentacion
+     * @param bf enlazar con la capa de business
+     */
     public UIController(UIManager ui, BusinessFacade bf) {
         this.ui = ui;
         this.bf = bf;
     }
 
+    /**
+     * Funcionamineto del programa comunicado con las funciones de las otras capas
+     */
     public void run (){
         //TrialData
         String trialName;
@@ -49,9 +60,9 @@ public class UIController {
                         case MANAGE_TRIALS:
                             switch (ui.menuTrials()) {
                                 case CREATE_TRIALS:
-                                    //ConsoleUIManager pide los datos al usuario
                                     switch (ui.askTrialsTypes()) {
                                         case 1:
+                                            perc = false;
                                             trialName = ui.askString(ConsoleUIManager.askTrialName);
                                             journalNme = ui.askString(ConsoleUIManager.askTrialJournal);
                                             quartile = ui.askQuartile();
@@ -81,14 +92,11 @@ public class UIController {
                                             entity = ui.askString(ConsoleUIManager.askEntity);
                                             budget = ui.askInt(ConsoleUIManager.askBudget, 1000, 2000000000);
                                             bf.createTrial(trialName, entity, budget, false);
-
                                     }
                                     break;
                                 case LIST_TRIALS:
                                     ui.listTrialsText();
-                                    //muestra las listas creadas
                                     int numPrueba = ui.showTrialsName(bf.trialsNames());
-                                    // comprovamos back
                                     if(!bf.trialExit(numPrueba)) {
                                         ui.showTrialData(bf.trialInfo(numPrueba));      //mostrar datos
                                     }
@@ -96,7 +104,6 @@ public class UIController {
                                 case DELETE_TRIALS:
                                     ui.deleteTrialsText();
                                     int numPruebaDel = ui.showTrialsName(bf.trialsNames());
-                                    // comprovamos back
                                     if(!bf.trialExit(numPruebaDel)) {
                                        if(ui.deleteConfirmation(numPruebaDel, bf.trialsNames())) {
                                            bf.deleteTrial(numPruebaDel);
@@ -105,15 +112,12 @@ public class UIController {
                                     }
                                     break;
                                 default:
-
-
                             }
                             break;
 
                         case MANAGE_EDITIONS:
                             switch (ui.menuEditions()){
                                 case CREATE_EDITION:
-                                    //pedimos info
                                     año = ui.askInt(ConsoleUIManager.askEditionYear, 1000, 9999);
                                     numJugadores = ui.askInt(ConsoleUIManager.askEditionPlayers, 1, 5);
                                     numPruebas= ui.askInt(ConsoleUIManager.askEditionNumberTrials, 3, 12);
@@ -151,7 +155,6 @@ public class UIController {
                                         bf.deleteEdition(numEditionDelete);
                                     }
                                     break;
-
                             }
                             break;
                         case EXIT:

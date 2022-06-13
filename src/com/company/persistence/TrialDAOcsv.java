@@ -8,11 +8,17 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Implementa funciones del DAO de las pruebas en CSV
+ */
 public class TrialDAOcsv implements TrialDAO{
     private Path path;
 
+    /**
+     * Constructor donde inicializamos el path
+     * @param path ruta que se ejecuta
+     */
     public TrialDAOcsv(String path) {
-
         try {
             Path p = Paths.get(path);       //ruta donde guardamos los archivos
             if (!Files.exists(p)) {
@@ -25,6 +31,10 @@ public class TrialDAOcsv implements TrialDAO{
         }
     }
 
+    /**
+     * Guardar prueba tipo Publicacion Articulo
+     * @param trial prueba tipo TrialPublicacionArticulo
+     */
     @Override
     public void save(TrialPublicacionArticulo trial) {
         try {
@@ -33,6 +43,11 @@ public class TrialDAOcsv implements TrialDAO{
             e.printStackTrace();
         }
     }
+
+    /**
+     * Guardar prueba tipo Master
+     * @param trial prueba tipo TrialMaster
+     */
     public void save(TrialMaster trial) {
         try {
             Files.write(path, Collections.singletonList(trialToCSV(trial)), StandardOpenOption.APPEND);
@@ -41,6 +56,10 @@ public class TrialDAOcsv implements TrialDAO{
         }
     }
 
+    /**
+     * Guardar prueba tipo Tesis
+     * @param trial prueba tipo TrialTesis
+     */
     @Override
     public void save(TrialTesis trial) {
         try {
@@ -50,6 +69,10 @@ public class TrialDAOcsv implements TrialDAO{
         }
     }
 
+    /**
+     * Guardar prueba tipo Budget
+     * @param trial prueba tipo TrialBudget
+     */
     @Override
     public void save(TrialBudget trial) {
         try {
@@ -59,7 +82,10 @@ public class TrialDAOcsv implements TrialDAO{
         }
     }
 
-    //Devuelve todas las pruebas
+    /**
+     * Acceder a todas las pruebas
+     * @return devuelve a todas las pruebas
+     */
     @Override
     public Trial[] getAll() {
         ArrayList<Trial> trial = new ArrayList<>();
@@ -93,7 +119,11 @@ public class TrialDAOcsv implements TrialDAO{
         return trial.toArray(new Trial[trial.size()]);
     }
 
-    //Devuelve la prueba que corresponde el num que le entra
+    /**
+     * Accede a la prueba Publicacion Articulo que correpende al numero que le entra
+     * @param numberTrial numero de la prueba que le entra
+     * @return devuelve la prueba que correpende al numero que le entra
+     */
     @Override
     public TrialPublicacionArticulo getPublicacion(int numberTrial) {
         try {
@@ -105,6 +135,11 @@ public class TrialDAOcsv implements TrialDAO{
         return null;
     }
 
+    /**
+     * Accede a la prueba Master que correpende al numero que le entra
+     * @param numberTrial numero de la prueba que le entra
+     * @return devuelve la prueba que correpende al numero que le entra
+     */
     @Override
     public TrialMaster getMaster(int numberTrial) {
         try {
@@ -116,6 +151,11 @@ public class TrialDAOcsv implements TrialDAO{
         return null;
     }
 
+    /**
+     * Accede a la prueba Tesis que correpende al numero que le entra
+     * @param numberTrial numero de la prueba que le entra
+     * @return devuelve la prueba que correpende al numero que le entra
+     */
     @Override
     public TrialTesis getTesis(int numberTrial) {
         try {
@@ -127,6 +167,11 @@ public class TrialDAOcsv implements TrialDAO{
         return null;
     }
 
+    /**
+     * Accede a la prueba Budget que correpende al numero que le entra
+     * @param numberTrial numero de la prueba que le entra
+     * @return devuelve la prueba que correpende al numero que le entra
+     */
     @Override
     public TrialBudget getBudget(int numberTrial) {
         try {
@@ -138,15 +183,24 @@ public class TrialDAOcsv implements TrialDAO{
         return null;
     }
 
+    /**
+     * Salir de la prueba
+     * @param numPrueba numero de la prueba que se quiere salir
+     * @return devuelve si se quiere salir o no de la prueba
+     */
     @Override
     public boolean trialExit(int numPrueba) {
-        Trial[] trials = getAll();      //llamamos a la funcion
+        Trial[] trials = getAll();
         if(trials.length + 1 == numPrueba) {
             return true;
         }
         return false;
     }
 
+    /**
+     * Eliminar prueba
+     * @param numPrueba numero de la prueba que se quiere eliminar
+     */
     @Override
     public void delete(int numPrueba) {
         ArrayList trial = new ArrayList();
@@ -184,6 +238,11 @@ public class TrialDAOcsv implements TrialDAO{
 
     }
 
+    /**
+     * Acceder al tipo de prueba
+     * @param numPrueba numero de prueba
+     * @return devuelve el tipo de prueba
+     */
     @Override
     public int getType(int numPrueba) {
         try {
@@ -195,7 +254,6 @@ public class TrialDAOcsv implements TrialDAO{
         return 0;
     }
 
-    //info a texto
     private String trialToCSV(TrialPublicacionArticulo trial) {
         String file;
 

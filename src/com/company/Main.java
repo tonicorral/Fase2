@@ -1,9 +1,7 @@
 package com.company;
 
-import com.company.business.BusinessFacade;
-import com.company.business.BusinessFacadeImpl;
-import com.company.business.TrialMaster;
-import com.company.business.TrialPublicacionArticulo;
+import com.company.business.*;
+import com.company.persistence.EditionDAOjson;
 import com.company.persistence.TrialDAO;
 import com.company.persistence.TrialDAOcsv;
 import com.company.persistence.TrialDAOjson;
@@ -12,13 +10,22 @@ import com.company.presentation.UIController;
 import com.company.presentation.UIManager;
 import org.w3c.dom.CDATASection;
 
+/**
+ * Se ejecutan todas las funciones de las diferentes capas
+ */
 public class Main {
 
+    /**
+     * Llamamos la funciones de las diferentes capas
+     * @param args recoger y almanecenar los valores
+     */
     public static void main(String[] args) {
         UIManager consoleUIManager = new ConsoleUIManager();
         TrialDAO trialDAO = new TrialDAOcsv("data/trials.csv");
         BusinessFacade businessFacade = new BusinessFacadeImpl();
         UIController uiController = new UIController(consoleUIManager, businessFacade);
+        EditionDAOjson editionDAOjson = new EditionDAOjson("data/edition.json", "data/currentEdition.json");
         uiController.run();
+
     }
 }

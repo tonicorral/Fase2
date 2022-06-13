@@ -1,5 +1,8 @@
 package com.company.presentation;
 
+/**
+ * Guardar funciones de otras clases y comunicar presentacion con business
+ */
 public interface UIManager {
     MenuOptions showRoles();
     MenuOptions opcionesCompositor();

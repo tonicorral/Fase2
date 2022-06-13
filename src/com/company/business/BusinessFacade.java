@@ -1,5 +1,8 @@
 package com.company.business;
 
+/**
+ *Gestionar todas las operaciones para manejar las pruebas y ediciones
+ */
 public interface BusinessFacade {
     void createTrial(String trialName, String trialJournal, String quartile, int acc, int rev, int rej);
     void createTrial(String trialName, String masterName, int credits, int prob);
@@ -10,8 +13,8 @@ public interface BusinessFacade {
     void deleteTrial(int numPrueba);
     void createEdition(int year, int numPlayers, int numTrials, int[] nums);
     int[] editionYear();
-    Edition addEditionTrial(int numEdition);      //metemos todas las pruebas dentro de la edicion
-    String[] editionInfo(int numEdition);       //sacamos la informacion de la edicion
+    Edition addEditionTrial(int numEdition);
+    String[] editionInfo(int numEdition);
     boolean exitEdition(int numEdition);
     int[] editionTrials(int numEdition);
     void deleteEdition(int numEdition);
