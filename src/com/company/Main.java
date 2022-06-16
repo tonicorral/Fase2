@@ -21,10 +21,7 @@ public class Main {
      */
     public static void main(String[] args) {
         UIManager consoleUIManager = new ConsoleUIManager();
-        TrialDAO trialDAO = new TrialDAOcsv("data/trials.csv");
-        BusinessFacade businessFacade = new BusinessFacadeImpl();
-        UIController uiController = new UIController(consoleUIManager, businessFacade);
-        EditionDAOjson editionDAOjson = new EditionDAOjson("data/edition.json", "data/currentEdition.json");
+        UIController uiController = new UIController(consoleUIManager);
         uiController.run();
 
     }

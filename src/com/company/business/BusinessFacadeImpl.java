@@ -10,23 +10,13 @@ import java.util.Random;
 public class BusinessFacadeImpl implements BusinessFacade{
     private final TrialManager trialManager;
     private final EditionManager editionManager;
-    private boolean pType;
 
     /**
      * Inicializamos trialManager y editionManager para realizar la gestion de prueba y ediciones
      */
-    public BusinessFacadeImpl() {
-        trialManager = new TrialManager();
-        editionManager = new EditionManager();
-    }
-
-    /**
-     * Fijamos el valor de la variable para elegir el tipo de persistencia
-     * @param pType tipo de persistencia que queremos que se guarde
-     */
-    @Override
-    public void setPType(boolean pType){
-        this.pType = pType;
+    public BusinessFacadeImpl(Boolean pType) {
+        trialManager = new TrialManager(pType);
+        editionManager = new EditionManager(pType);
     }
 
     /**
@@ -40,7 +30,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public void createTrial(String trialName, String trialJournal, String quartile, int acc, int rev, int rej) {
-        trialManager.crearPruebaPublicacion(trialName, trialJournal, quartile, acc, rev, rej,true , pType);
+        trialManager.crearPruebaPublicacion(trialName, trialJournal, quartile, acc, rev, rej,true);
     }
 
     /**
@@ -51,7 +41,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      * @param prob la probabilidad de aprobar un credito
      */
     public void createTrial(String trialName, String masterName, int credits, int prob) {
-        trialManager.crearTrialMaster(trialName, masterName, credits, prob, true , pType);
+        trialManager.crearTrialMaster(trialName, masterName, credits, prob, true);
     }
 
     /**
@@ -63,10 +53,10 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     public void createTrial(String trialName, String b, int num, boolean check) {
         if(check){
-            trialManager.crearTrialTesis(trialName, b, num, true,  pType);
+            trialManager.crearTrialTesis(trialName, b, num, true);
         }
         else{
-            trialManager.crearTrialBudget(trialName, b, num, true , pType);
+            trialManager.crearTrialBudget(trialName, b, num, true);
         }
     }
 
@@ -76,7 +66,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public String[] trialsNames() {
-        return trialManager.listaPruebas(pType);
+        return trialManager.listaPruebas();
     }
 
     /**
@@ -86,7 +76,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public String[] trialInfo(int numberTrial) {
-        return trialManager.infoPrueba(numberTrial, pType);
+        return trialManager.infoPrueba(numberTrial);
     }
 
     /**
@@ -96,7 +86,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public boolean trialExit(int numPrueba) {
-        return trialManager.trialExit(numPrueba, pType);
+        return trialManager.trialExit(numPrueba);
     }
 
     /**
@@ -105,7 +95,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public void deleteTrial(int numPrueba) {
-        trialManager.delete(numPrueba, pType);
+        trialManager.delete(numPrueba);
     }
 
     /**
@@ -117,7 +107,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public void createEdition(int year, int numPlayers, int numTrials, int[] nums) {
-        editionManager.crearEdition(year, numPlayers, numTrials, nums, pType);
+        editionManager.crearEdition(year, numPlayers, numTrials, nums);
     }
 
     /**
@@ -126,7 +116,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public int[] editionYear() {
-        return editionManager.listaEdition(pType);
+        return editionManager.listaEdition();
     }
 
     /**
@@ -136,24 +126,24 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public Edition addEditionTrial(int numEdition) {
-        Edition edition = editionManager.getEdition(numEdition, pType);
+        Edition edition = editionManager.getEdition(numEdition);
         ArrayList trials = new ArrayList();
 
         for (int i = 0; i < edition.getNumTrials(); i++) {
-            String[] prueba = trialManager.infoPrueba(edition.getNum()[i], pType);         //pillamos todos los datos de la prueba
+            String[] prueba = trialManager.infoPrueba(edition.getNum()[i]);         //pillamos todos los datos de la prueba
             switch (prueba[0]) {
                 case "1":
                     trials.add(trialManager.crearPruebaPublicacion(prueba[1], prueba[2], prueba[3], Integer.parseInt(prueba[4]),
-                            Integer.parseInt(prueba[5]), Integer.parseInt(prueba[6]), false, pType));
+                            Integer.parseInt(prueba[5]), Integer.parseInt(prueba[6]), false));
                     break;
                 case "2":
-                    trials.add(trialManager.crearTrialMaster(prueba[1], prueba[2], Integer.parseInt(prueba[3]),  Integer.parseInt(prueba[4]), false, pType));
+                    trials.add(trialManager.crearTrialMaster(prueba[1], prueba[2], Integer.parseInt(prueba[3]),  Integer.parseInt(prueba[4]), false));
                     break;
                 case "3":
-                    trials.add(trialManager.crearTrialTesis(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false, pType));
+                    trials.add(trialManager.crearTrialTesis(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false));
                     break;
                 case "4":
-                    trials.add(trialManager.crearTrialBudget(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false, pType));
+                    trials.add(trialManager.crearTrialBudget(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false));
                     break;
             }
         }
@@ -209,7 +199,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public boolean exitEdition(int numEdition) {
-        return editionManager.exitEdition(numEdition, pType);
+        return editionManager.exitEdition(numEdition);
     }
 
     /**
@@ -219,7 +209,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public int[] editionTrials(int numEdition) {
-        Edition edition = editionManager.getEdition(numEdition, pType);
+        Edition edition = editionManager.getEdition(numEdition);
         return edition.getNum();
     }
 
@@ -229,7 +219,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public void deleteEdition(int numEdition) {
-        editionManager.deleteEdition(numEdition, pType);
+        editionManager.deleteEdition(numEdition);
     }
 
     /**
@@ -238,7 +228,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public boolean checkCurrentEdition() {
-        if(editionManager.getCurrentEdition(pType) == null) {
+        if(editionManager.getCurrentEdition() == null) {
             return false;
         }
         return true;
@@ -250,7 +240,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public int[] getCurrentEditionData() {
-        Edition edition = editionManager.getCurrentEdition(pType);
+        Edition edition = editionManager.getCurrentEdition();
         int year = edition.getYear();
         int numPlayers = edition.getNumPlayers();
 
@@ -278,30 +268,36 @@ public class BusinessFacadeImpl implements BusinessFacade{
         String trial;
         int[] types = new int[edition.getNumPlayers()];
 
-        for (int i = 0; i < edition.getNumPlayers(); i++) {
-            types[i] = players0[i].getType();
+        try {
+            for (int i = 0; i < edition.getNumPlayers(); i++) {
+                types[i] = players0[i].getType();
+            }
+
+            if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialPublicacionArticulo) {
+                players1 = executeTrial((TrialPublicacionArticulo) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
+                trial = "1";
+            }
+            else if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialMaster) {
+                players1 = executeTrial((TrialMaster) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
+                trial = "2";
+            }
+            else if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialTesis) {
+                players1 = executeTrial((TrialTesis) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
+                trial = "3";
+            }
+            else {
+                players1 = executeTrial((TrialBudget) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
+                trial = "4";
+            }
+
+            editionManager.saveCurrentEdition(editionManager.getCurrentEdition(), players1, edition.getCurrentTrial()+1);
+
+            return doEdition(edition, players1, trial, types);
+        } catch (IndexOutOfBoundsException e) {
+            editionManager.deleteData();
+            return null;
         }
 
-        if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialPublicacionArticulo) {
-            players1 = executeTrial((TrialPublicacionArticulo) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
-            trial = "1";
-        }
-        else if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialMaster) {
-            players1 = executeTrial((TrialMaster) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
-            trial = "2";
-        }
-        else if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialTesis) {
-            players1 = executeTrial((TrialTesis) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
-            trial = "3";
-        }
-        else {
-            players1 = executeTrial((TrialBudget) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
-            trial = "4";
-        }
-
-        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(pType), players1, edition.getCurrentTrial()+1, pType);
-
-        return doEdition(edition, players1, trial, types);
     }
 
     /**
@@ -311,38 +307,42 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public String[] startEdition(String[] players) {
-        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(pType),savePlayers(players),0, pType);
-        Edition edition = addEditionTrial(editionManager.loadCurrentEdition(pType));
+        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(),savePlayers(players),0);
+        Edition edition = addEditionTrial(editionManager.loadCurrentEdition());
         Player[] players0 = edition.getPlayers();
         Player[] players1;
         String trial;
         int[] types = new int[edition.getNumPlayers()];
 
-        for (int i = 0; i < edition.getNumPlayers(); i++) {
-            types[i] = players0[i].getType();
-        }
+        try {
+            for (int i = 0; i < edition.getNumPlayers(); i++) {
+                types[i] = players0[i].getType();
+            }
 
-        if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialPublicacionArticulo) {
-            players1 = executeTrial((TrialPublicacionArticulo) edition.getTrials().get(0), savePlayers(players));
-            trial = "1";
-        }
-        else if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialMaster) {
-            players1 = executeTrial((TrialMaster) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
-            trial = "2";
-        }
-        else if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialTesis) {
-            players1 = executeTrial((TrialTesis) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
-            trial = "3";
-        }
-        else {
-            players1 = executeTrial((TrialBudget) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
-            trial = "4";
-        }
+            if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialPublicacionArticulo) {
+                players1 = executeTrial((TrialPublicacionArticulo) edition.getTrials().get(0), savePlayers(players));
+                trial = "1";
+            }
+            else if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialMaster) {
+                players1 = executeTrial((TrialMaster) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
+                trial = "2";
+            }
+            else if(edition.getTrials().get(edition.getCurrentTrial()) instanceof TrialTesis) {
+                players1 = executeTrial((TrialTesis) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
+                trial = "3";
+            }
+            else {
+                players1 = executeTrial((TrialBudget) edition.getTrials().get(edition.getCurrentTrial()), edition.getPlayers());
+                trial = "4";
+            }
 
-        editionManager.saveCurrentEdition(editionManager.getCurrentEdition(pType), players1, 1, pType);
+            editionManager.saveCurrentEdition(editionManager.getCurrentEdition(), players1, 1);
+            return doEdition(edition, players1, trial, types);
 
-        return doEdition(edition, players1, trial, types);
-
+        } catch (IndexOutOfBoundsException e) {
+            editionManager.deleteData();
+            return null;
+        }
     }
 
     private String[] doEdition(Edition edition, Player[] players1, String trial, int[] types) {
@@ -555,7 +555,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
 
             if(player[i].getType() != 2) {
                 if(player[i].getPI() >= 10) {
-                   player[i].evolve();
+                   player[i] = player[i].evolve();
                 }
             }
         }
@@ -591,7 +591,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
             }
             if(player[i].getType() != 2) {
                 if (player[i].getPI() >= 10) {
-                    player[i].evolve();
+                    player[i] = player[i].evolve();
                 }
             }
         }
@@ -616,7 +616,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
                 player[i].addPI(player[i].getPI()/2);
                 if(player[i].getType() != 2) {
                     if (player[i].getPI() >= 10) {
-                        player[i].evolve();
+                        player[i] = player[i].evolve();
                     }
                 }
             }
@@ -635,20 +635,20 @@ public class BusinessFacadeImpl implements BusinessFacade{
         ArrayList trials = new ArrayList();
 
         for (int i = 0; i < edition.getNumTrials(); i++) {
-            String[] prueba = trialManager.infoPrueba(edition.getNum()[i], pType);         //pillamos todos los datos de la prueba
+            String[] prueba = trialManager.infoPrueba(edition.getNum()[i]);         //pillamos todos los datos de la prueba
             switch (prueba[0]) {
                 case "1":
                     trials.add(trialManager.crearPruebaPublicacion(prueba[1], prueba[2], prueba[3], Integer.parseInt(prueba[4]),
-                            Integer.parseInt(prueba[5]), Integer.parseInt(prueba[6]), false, pType));
+                            Integer.parseInt(prueba[5]), Integer.parseInt(prueba[6]), false));
                     break;
                 case "2":
-                    trials.add(trialManager.crearTrialMaster(prueba[1], prueba[2], Integer.parseInt(prueba[3]),  Integer.parseInt(prueba[4]), false, pType));
+                    trials.add(trialManager.crearTrialMaster(prueba[1], prueba[2], Integer.parseInt(prueba[3]),  Integer.parseInt(prueba[4]), false));
                     break;
                 case "3":
-                    trials.add(trialManager.crearTrialTesis(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false, pType));
+                    trials.add(trialManager.crearTrialTesis(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false));
                     break;
                 case "4":
-                    trials.add(trialManager.crearTrialBudget(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false, pType));
+                    trials.add(trialManager.crearTrialBudget(prueba[1], prueba[2], Integer.parseInt(prueba[3]), false));
                     break;
             }
         }
@@ -662,7 +662,7 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public Edition loadCurrentEdition() {
-        return editionManager.loadCurrentEdition(pType);
+        return editionManager.loadCurrentEdition();
     }
 
     /**
@@ -683,7 +683,22 @@ public class BusinessFacadeImpl implements BusinessFacade{
      */
     @Override
     public void clearCurrentEdition() {
-        editionManager.clearCurrentEdition(pType);
+        editionManager.clearCurrentEdition();
+    }
+
+    @Override
+    public boolean checkTrialEdition(int numPrueba) {
+        Edition[] editions = editionManager.getAll();
+
+        for (Edition e: editions) {
+            for (int i = 0; i < e.getNum().length; i++) {
+                if(numPrueba == e.getNum()[i]) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private Engineer[] savePlayers(String[] names) {

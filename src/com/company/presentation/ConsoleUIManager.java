@@ -373,7 +373,7 @@ public class ConsoleUIManager implements UIManager {
         do {
             String info = scanner.nextLine();
 
-            if(!info.equals("")) {
+            if(!info.equals("") &&  info.length() > 0 && !info.equals(" ")) {
                 return info;
             }
             System.out.println("Enter a valid text!");
@@ -708,6 +708,11 @@ public class ConsoleUIManager implements UIManager {
         }
         System.out.println("The sum of the three probabilities must be 100!\n");
         return false;
+    }
+
+    @Override
+    public void deleteNot() {
+        System.out.println("The trial you are trying to delete, is already in an edition.");
     }
 }
 

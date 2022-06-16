@@ -14,7 +14,8 @@ public interface EditionDAO {
     Edition get(int numEdition);
     boolean exitEdition(int numEdition);
     void delete(int numEdition);
-    void saveCurrent(Edition edition, Object[] players, int currentTrial);
+    void saveCurrent(Edition edition, Player[] players, int currentTrial);
     String loadCurrent();
     void emptyCurrent();
+    void deleteData();
 }

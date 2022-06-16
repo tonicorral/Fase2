@@ -6,11 +6,9 @@ import com.google.gson.stream.JsonReader;
 
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Implementa las funciones del DAO de las pruebas en JSON
@@ -145,8 +143,20 @@ public class TrialDAOjson implements TrialDAO {
             file = new FileReader(path);
             trials = gson.fromJson(file, ArrayList.class);
 
-        } catch (java.io.IOException e ) {
-            e.printStackTrace();
+        } catch (java.io.IOException | JsonSyntaxException | ArrayIndexOutOfBoundsException e ) {
+            System.out.println("Error detected in saved data, shutting down the program...");
+            try {
+                Path p1 = Paths.get(path);
+                Path p2 = Paths.get("data/edition.json");
+                Path p3 = Paths.get("data/currentEdition.json");
+                String a = "";
+                Files.write(p1, Collections.singletonList(a), StandardOpenOption.DELETE_ON_CLOSE);
+                Files.write(p2, Collections.singletonList(a), StandardOpenOption.DELETE_ON_CLOSE);
+                Files.write(p3, Collections.singletonList(a), StandardOpenOption.DELETE_ON_CLOSE);
+            } catch (IOException j) {
+                j.printStackTrace();
+            }
+            System.exit(0);
         }
 
         return  trials.get(numberTrial-1);

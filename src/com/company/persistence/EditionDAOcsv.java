@@ -141,7 +141,7 @@ public class EditionDAOcsv implements EditionDAO {
      * @param currentTrial prueba actual
      */
     @Override
-    public void saveCurrent(Edition edition, Object[] players, int currentTrial) {
+    public void saveCurrent(Edition edition, Player[] players, int currentTrial) {
         try {
             Files.write(pathCurrent, Collections.singletonList(currentEditionToCSV(edition, players, currentTrial)), StandardOpenOption.WRITE);
         } catch (IOException e) {
@@ -181,7 +181,12 @@ public class EditionDAOcsv implements EditionDAO {
         }
     }
 
-    private String currentEditionToCSV(Edition edition, Object[] players, int currentTrial) {
+    @Override
+    public void deleteData() {
+
+    }
+
+    private String currentEditionToCSV(Edition edition, Player[] players, int currentTrial) {
         int year = edition.getYear();
         int numPlayers = edition.getNumPlayers();
         String[] name = new String[numPlayers];
@@ -190,21 +195,9 @@ public class EditionDAOcsv implements EditionDAO {
         String data = year+","+numPlayers+",";
 
         for (int i = 0; i < numPlayers; i++) {
-            Player player;
-
-            if(players[i] instanceof Engineer) {
-                type[i] = 0;
-            }
-            else if(players[i] instanceof Doctor) {
-                 type[i] = 1;
-            }
-            else {
-                type[i] = 2;
-            }
-
-            player = (Player) players[i];
-            name[i] = player.getName();
-            PI[i] = player.getPI();
+            type[i] = players[i].getType();
+            name[i] = players[i].getName();
+            PI[i] = players[i].getPI();
             data = data+name[i]+","+PI[i]+","+type[i]+",";
         }
         data = data+currentTrial+";";

@@ -33,5 +33,6 @@ public interface UIManager {
     String askQuartile();
     boolean askPersistence();
     boolean checkPercentage(int acc, int rev, int rej);
+    void deleteNot();
     }
 

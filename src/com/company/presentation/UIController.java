@@ -1,22 +1,21 @@
 package com.company.presentation;
 
 import com.company.business.BusinessFacade;
+import com.company.business.BusinessFacadeImpl;
 
 /**
  * Controlar las acciones que suceden en cada momento
  */
 public class UIController {
     private final UIManager ui;
-    private final BusinessFacade bf;
+    private BusinessFacade bf;
 
     /**
      * Asignar los valores iniciales de los controladores de las capas
      * @param ui enlazar con la capa de presentacion
-     * @param bf enlazar con la capa de business
      */
-    public UIController(UIManager ui, BusinessFacade bf) {
+    public UIController(UIManager ui) {
         this.ui = ui;
-        this.bf = bf;
     }
 
     /**
@@ -51,8 +50,7 @@ public class UIController {
         int numPruebas;
         int[] seleccionPruebas;
 
-
-        bf.setPType(ui.askPersistence());
+        bf = new BusinessFacadeImpl(ui.askPersistence());
         while(true) {
             switch (ui.showRoles()) {
                 case SELECT_COMPOSITOR:
@@ -105,10 +103,12 @@ public class UIController {
                                     ui.deleteTrialsText();
                                     int numPruebaDel = ui.showTrialsName(bf.trialsNames());
                                     if(!bf.trialExit(numPruebaDel)) {
-                                       if(ui.deleteConfirmation(numPruebaDel, bf.trialsNames())) {
-                                           bf.deleteTrial(numPruebaDel);
-                                           ui.deleteOK();
-                                       }
+                                       if(!bf.checkTrialEdition(numPruebaDel)) {
+                                           if(ui.deleteConfirmation(numPruebaDel, bf.trialsNames())) {
+                                               bf.deleteTrial(numPruebaDel);
+                                               ui.deleteOK();
+                                           }
+                                       } else{ui.deleteNot();}
                                     }
                                     break;
                                 default:
